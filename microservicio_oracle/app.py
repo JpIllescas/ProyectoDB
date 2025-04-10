@@ -1,6 +1,6 @@
 from flask import Flask
 from .routes import main_routes
-from microservicio_a.config.config import get_db_connection, Base
+from microservicio_oracle.config.config import get_db_connection, Base
 
 app = Flask(__name__)
 
