@@ -1,10 +1,8 @@
 from flask import Blueprint, request
-
-# Importamos funciones desde services
-from ..services.cliente_service import get_clientes, create_cliente, update_cliente
-from ..services.producto_service import get_productos, create_producto, update_producto
-from ..services.pedido_service import get_pedidos, create_pedido, update_pedido
-from ..services.detalle_pedido_service import get_detalle_pedido, create_detalle_pedido, update_detalle_pedido
+from services.cliente_service import get_clientes, create_cliente, update_cliente
+from services.producto_service import get_productos, create_producto, update_producto
+from services.pedido_service import get_pedidos, create_pedido, update_pedido
+from services.detalle_pedido_service import get_detalle_pedido, create_detalle_pedido, update_detalle_pedido
 
 main_bp = Blueprint("main", __name__)
 

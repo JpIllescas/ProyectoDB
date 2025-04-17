@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Numeric, Date, ForeignKey 
 from sqlalchemy.orm import relationship
-from .config.config import Base
+from config.config import Base
 from datetime import date 
 
 class Cliente(Base): 

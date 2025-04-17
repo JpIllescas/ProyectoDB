@@ -1,6 +1,6 @@
 from flask import jsonify 
-from ..models import Cliente 
-from ..config.config import SessionLocal 
+from models import Cliente 
+from config.config import SessionLocal 
 
 def get_clientes():
     session = SessionLocal()
