@@ -1,6 +1,6 @@
 from functools import wraps
 from flask import jsonify
-from ..config.config import SessionLocal
+from config.config import SessionLocal
 
 def with_session(func):
     @wraps(func)

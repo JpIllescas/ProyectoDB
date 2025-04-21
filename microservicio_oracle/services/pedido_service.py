@@ -1,6 +1,6 @@
 from flask import jsonify 
-from models import Pedido  
-from config.config import SessionLocal 
+from ..models import Pedido  
+from ..config.config import SessionLocal 
 
 def get_pedidos():
     session = SessionLocal()

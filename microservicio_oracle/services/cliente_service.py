@@ -1,20 +1,15 @@
 from flask import jsonify 
-from models import Cliente 
-from config.config import SessionLocal 
+from ..models import Cliente 
 
-def get_clientes():
-    session = SessionLocal()
+def get_clientes(SessionLocal):
     try:
-        
-        clientes = session.query(Cliente).all()
+        session = SessionLocal()
+        clientes = session.query(Cliente).all()  
         return jsonify([{"id": c.id_cliente, "nombre": c.nombre, "gmail": c.gmail, "telefono": c.telefono} for c in clientes])
     except Exception as e:
-        return jsonify({"error": str(e)})
-
-    finally: 
-        session.close()
+        return print(e)
         
-def create_cliente(data):
+def create_cliente(data, SessionLocal):
     session = SessionLocal()
     nombre = data.get ("nombre")
     gmail = data.get ("gmail")
@@ -27,11 +22,9 @@ def create_cliente(data):
         session.commit()
         return jsonify({"message": "Cliente creado correctamente", "status": 201})
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
-    finally:
-        session.close()
+        return print(e), 500
     
-def update_cliente(id, data):
+def update_cliente(id, data, SessionLocal):
     session = SessionLocal()
     cliente = session.query(Cliente).filter_by(id_cliente=id).first()
     if not cliente:
@@ -47,7 +40,6 @@ def update_cliente(id, data):
         session.commit()
     except Exception as e:
         session.rollback()
-        return jsonify({"error": str(e)}), 500
+        return print(e), 500
     finally:
-        session.close()
         return jsonify({"message": "Cliente actualizado correctamente", "status": 200})

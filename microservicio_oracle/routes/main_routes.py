@@ -1,23 +1,27 @@
-from flask import Blueprint, request
-from services.cliente_service import get_clientes, create_cliente, update_cliente
-from services.producto_service import get_productos, create_producto, update_producto
-from services.pedido_service import get_pedidos, create_pedido, update_pedido
-from services.detalle_pedido_service import get_detalle_pedido, create_detalle_pedido, update_detalle_pedido
+
+from flask import Blueprint, request, current_app
+from ..services.cliente_service import get_clientes, create_cliente, update_cliente
+from ..services.producto_service import get_productos, create_producto, update_producto
+from ..services.pedido_service import get_pedidos, create_pedido, update_pedido
+from ..services.detalle_pedido_service import get_detalle_pedido, create_detalle_pedido, update_detalle_pedido
 
 main_bp = Blueprint("main", __name__)
 
 # ---- CLIENTES ----
 @main_bp.route("/clientes", methods=["GET"])
 def route_get_clientes():
-    return get_clientes()
+    SessionLocal = current_app.config["SESSION_LOCAL"]
+    return get_clientes(SessionLocal)
 
 @main_bp.route("/create/cliente", methods=["POST"])
 def route_create_cliente():
-    return create_cliente(request.json)
+    SessionLocal = current_app.config["SESSION_LOCAL"]
+    return create_cliente(request.json, SessionLocal) 
 
 @main_bp.route("/update/cliente/<int:id>", methods=["PUT"])
 def route_update_cliente(id):
-    return update_cliente(id, request.json)
+    SessionLocal = current_app.config["SESSION_LOCAL"]
+    return update_cliente(id, request.json, SessionLocal)
 
 # ---- PRODUCTOS ----
 @main_bp.route("/productos", methods=["GET"])
