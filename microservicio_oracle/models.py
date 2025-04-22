@@ -13,7 +13,7 @@ class Cliente(Base):
 
     # Relación con pedidos
     pedidos = relationship("Pedido", back_populates="cliente")
-        
+           
 class Producto(Base):
     __tablename__ = "productos"
     

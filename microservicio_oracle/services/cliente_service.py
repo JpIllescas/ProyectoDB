@@ -1,7 +1,7 @@
 from flask import jsonify 
 from ..models import Cliente 
 
-def get_clientes(SessionLocal):
+def get_clientes(SessionLocal): 
     try:
         session = SessionLocal()
         clientes = session.query(Cliente).all()  
