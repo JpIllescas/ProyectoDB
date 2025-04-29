@@ -46,4 +46,8 @@ def update_pedido(idz, data):
             session.rollback()
             return jsonify({"error": str(e)}), 500
         finally:
-            session.close()  
+            session.close()
+
+producto.stock -= cantidad
+if producto.stock < 0:
+    return jsonify({"error": "Stock insuficiente"}), 400
