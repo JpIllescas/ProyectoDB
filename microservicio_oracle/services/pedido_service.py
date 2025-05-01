@@ -1,6 +1,6 @@
 from flask import jsonify 
-from ..models import Pedido  
-from ..config.config import SessionLocal 
+from models import Pedido  
+from config.config import SessionLocal 
 
 def get_pedidos():
     session = SessionLocal()
@@ -14,13 +14,12 @@ def get_pedidos():
 
 def create_pedido(data):
     session = SessionLocal()
-    fecha = data.get ("fecha")
     estado = data.get ("estado")
     id_cliente = data.get ("id_cliente")
-    if not fecha or not estado or not id_cliente:
-        return jsonify(({"error": "'fecha'. 'estado' y 'id_cliente' son campos obligatorios", "status": 400}))
+    if  not estado or not id_cliente:
+        return jsonify(({"error": "'estado' y 'id_cliente' son campos obligatorios", "status": 400}))
     try:
-        pedido = Pedido(fecha=fecha, estado=estado, id_cliente=id_cliente)
+        pedido = Pedido(estado=estado, id_cliente=id_cliente)
         session.add(pedido)
         session.commit()
         return jsonify({"message": "Pedido creado correctamente", "status": 201})
@@ -47,7 +46,3 @@ def update_pedido(idz, data):
             return jsonify({"error": str(e)}), 500
         finally:
             session.close()
-
-producto.stock -= cantidad
-if producto.stock < 0:
-    return jsonify({"error": "Stock insuficiente"}), 400

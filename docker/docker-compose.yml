@@ -5,10 +5,10 @@ services:
     image: container-registry.oracle.com/database/express:21.3.0-xe
     container_name: oracle-db
     environment:
-      ORACLE_PWD: admin123
+      ORACLE_PWD: 2108Josee
       ORACLE_CHARACTERSET: AL32UTF8
     ports:
-      - "1521:1521"
+      - "1522:1521"
     healthcheck:
       test: ["CMD", "lsnrctl", "status"]
       interval: 30s
@@ -18,27 +18,34 @@ services:
   cockroachdb:
     image: cockroachdb/cockroach:v23.1.11
     container_name: cockroachdb
-    command: start-single-node --insecure
+    command: >
+      start-single-node --insecure &&
+      sleep 5 &&
+      /cockroach/cockroach sql --insecure --execute="CREATE DATABASE IF NOT EXISTS tracking;"
     ports:
-      - "26257:26257"
-      - "8080:8080"
+      - "26258:26257"
+      - "8081:8080"
     volumes:
       - cockroach-data:/cockroach/cockroach-data
+    healthcheck:
+      test: ["CMD", "/cockroach/cockroach", "node", "status", "--insecure"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   microservicio_oracle:
     build:
       context: ../microservicio_oracle
     container_name: microservicio_oracle
     ports:
-      - "5001:5000"
+      - "5001:3000"
     depends_on:
-      - oracle-db
-    environment:
-      DB_USER: SYSTEM
-      DB_PASSWORD: admin123
-      DB_HOST: oracle-db
-      DB_PORT: 1521
-      DB_SERVICE: XEPDB1
+      oracle-db:
+        condition: service_healthy
+    entrypoint: >
+      sh -c "sleep 120 && python app.py"
+    env_file:
+      - ../microservicio_oracle/.env
 
   microservicio_cockroach:
     build:
@@ -47,13 +54,10 @@ services:
     ports:
       - "5002:5000"
     depends_on:
-      - cockroachdb
-    environment:
-      DB_HOST: cockroachdb
-      DB_PORT: 26257
-      DB_USER: root
-      DB_PASSWORD: ""
-      DB_NAME: tracking
+      cockroachdb:
+        condition: service_healthy
+    env_file:
+      - ../microservicio_cockroach/.env
 
 volumes:
   cockroach-data:

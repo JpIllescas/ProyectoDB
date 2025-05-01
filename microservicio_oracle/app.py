@@ -1,6 +1,6 @@
 from flask import Flask
-from .routes import main_routes
-from .config.config import get_db_connection, Base
+from routes import main_routes
+from config.config import get_db_connection, Base
 
 app = Flask(__name__)
 

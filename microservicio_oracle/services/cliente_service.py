@@ -1,5 +1,5 @@
 from flask import jsonify 
-from ..models import Cliente 
+from models import Cliente 
 
 def get_clientes(SessionLocal): 
     try:
@@ -22,7 +22,8 @@ def create_cliente(data, SessionLocal):
         session.commit()
         return jsonify({"message": "Cliente creado correctamente", "status": 201})
     except Exception as e:
-        return print(e), 500
+        print(e)
+        return jsonify({"error": "Error interno del servidor"}), 500
     
 def update_cliente(id, data, SessionLocal):
     session = SessionLocal()
