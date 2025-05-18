@@ -57,9 +57,11 @@ services:
       cockroachdb:
         condition: service_healthy
       rabbitmq:
-       condition: service_started
+        condition: service_started
     env_file:
       - ../microservicio_cockroach/.env
+    entrypoint: >
+      sh -c "sleep 30 && python app.py"
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -67,8 +69,8 @@ services:
       - "5672:5672"
       - "15672:15672"  # UI
     environment:
-      RABBITMQ_DEFAULT_USER: $(RABBITMQ_USER)
-      RABBITMQ_DEFAULT_PASS: $(RABBITMQ_PASSWORD)
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
 
 volumes:
   cockroach-data:
