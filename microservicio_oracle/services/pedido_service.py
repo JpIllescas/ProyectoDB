@@ -14,17 +14,22 @@ def get_pedidos():
 
 def create_pedido(data):
     session = SessionLocal()
-    estado = data.get ("estado")
-    id_cliente = data.get ("id_cliente")
-    if  not estado or not id_cliente:
-        return jsonify(({"error": "'estado' y 'id_cliente' son campos obligatorios", "status": 400}))
+    estado = data.get("estado")
+    id_cliente = data.get("id_cliente")
+    if not estado or not id_cliente:
+        return None, jsonify({"error": "'estado' y 'id_cliente' son campos obligatorios", "status": 400})
     try:
         pedido = Pedido(estado=estado, id_cliente=id_cliente)
         session.add(pedido)
         session.commit()
-        return jsonify({"message": "Pedido creado correctamente", "status": 201})
+        # Guarda los datos ANTES de cerrar la sesión
+        pedido_id = pedido.id_pedido
+        pedido_estado = pedido.estado
+        response = jsonify({"message": "Pedido creado correctamente", "status": 201, "id_pedido": pedido_id})
+        return (pedido_id, pedido_estado), response
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        session.rollback()
+        return None, jsonify({"error": str(e)}), 500
     finally:
         session.close()
     

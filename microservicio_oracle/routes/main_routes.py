@@ -43,9 +43,11 @@ def route_get_pedidos():
 
 @main_bp.route("/create/pedido", methods=["POST"])
 def route_create_pedido():
-    pedido = create_pedido(request.json)
-    send_message("pedidos_queue", f"Pedido creado: {pedido.id_pedido}, Estado: {pedido.estado}")
-    return pedido
+    pedido_data, response = create_pedido(request.json)
+    if pedido_data:
+        pedido_id, pedido_estado = pedido_data
+        send_message("pedidos_queue", f"Pedido creado: {pedido_id}, Estado: {pedido_estado}")
+    return response
 
 @main_bp.route("/update/pedido/<int:idz>", methods=["PUT"])
 def route_update_pedido(idz):
