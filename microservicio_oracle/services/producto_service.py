@@ -14,6 +14,22 @@ def get_productos():
     finally: 
         session.close()
         
+def get_producto_by_id(id):
+    session = SessionLocal()
+    try:
+        producto = session.query(Producto).filter_by(id_producto=id).first()
+        if producto:
+            return {
+                "id_producto": producto.id_producto,
+                "nombre": producto.nombre,
+                "precio": float(producto.precio),
+                "stock": producto.stock
+            }, 200
+        else:
+            return {"error": "Producto no encontrado"}, 404
+    finally:
+        session.close()
+        
 def create_producto(data):
     session =SessionLocal()
     nombre = data.get ("nombre")

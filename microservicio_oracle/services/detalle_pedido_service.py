@@ -11,7 +11,23 @@ def get_detalle_pedido():
         return jsonify({"error": str (e)})
     finally:
         session.close()
-
+        
+def get_detalle_pedido_by_id(id):
+    session = SessionLocal()
+    try:
+        detalle_pedido = session.query(DetallePedido).filter_by(id_detalle=id).first()
+        if detalle_pedido:
+            return {
+                "id_detalle": detalle_pedido.id_detalle,
+                "id_pedido": detalle_pedido.id_pedido,
+                "id_producto": detalle_pedido.id_producto,
+                "cantidad": detalle_pedido.cantidad
+            }, 200
+        else:
+            return {"error": "Detalle de pedido no encontrado"}, 404
+    finally:
+        session.close()
+        
 def create_detalle_pedido(data):
     session = SessionLocal()
     id_pedido = data.get ("id_pedido")

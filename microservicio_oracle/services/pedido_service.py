@@ -12,6 +12,22 @@ def get_pedidos():
     finally:
         session.close()
 
+def get_pedido_by_id(id):
+    session = SessionLocal()
+    try:
+        pedido = session.query(Pedido).filter_by(id_pedido=id).first()
+        if pedido:
+            return {
+                "id_pedido": pedido.id_pedido,
+                "fecha": str(pedido.fecha),
+                "estado": pedido.estado,
+                "id_cliente": pedido.id_cliente
+            }, 200
+        else:
+            return {"error": "Pedido no encontrado"}, 404
+    finally:
+        session.close()
+
 def create_pedido(data):
     session = SessionLocal()
     estado = data.get("estado")

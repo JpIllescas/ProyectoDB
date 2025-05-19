@@ -8,6 +8,22 @@ def get_clientes(SessionLocal):
         return jsonify([{"id": c.id_cliente, "nombre": c.nombre, "gmail": c.gmail, "telefono": c.telefono} for c in clientes])
     except Exception as e:
         return print(e)
+    
+def get_cliente_by_id(id, SessionLocal):
+    session = SessionLocal()
+    try:
+        cliente = session.query(Cliente).filter_by(id_cliente=id).first()
+        if cliente:
+            return {
+                "id_cliente": cliente.id_cliente,
+                "nombre": cliente.nombre,
+                "gmail": cliente.gmail,
+                "telefono": cliente.telefono
+            }, 200
+        else:
+            return {"error": "Cliente no encontrado"}, 404
+    finally:
+        session.close()
         
 def create_cliente(data, SessionLocal):
     session = SessionLocal()
