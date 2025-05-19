@@ -1,4 +1,3 @@
-from flask import jsonify 
 from models import Pedido  
 from config.config import SessionLocal 
 
@@ -6,9 +5,16 @@ def get_pedidos():
     session = SessionLocal()
     try:
         pedidos = session.query(Pedido).all()
-        return jsonify([{"id": p.id_pedido, "fecha": p.fecha, "estado": p.estado, "id_cliente": p.id_cliente} for p in pedidos])
+        return [
+            {
+                "id_pedido": p.id_pedido,
+                "fecha": str(p.fecha),
+                "estado": p.estado,
+                "id_cliente": p.id_cliente
+            } for p in pedidos
+        ], 200
     except Exception as e:
-        return jsonify({"error": str(e)})
+        return {"error": "Error interno del servidor"}, 500
     finally:
         session.close()
 
@@ -25,6 +31,8 @@ def get_pedido_by_id(id):
             }, 200
         else:
             return {"error": "Pedido no encontrado"}, 404
+    except Exception as e:
+        return {"error": "Error interno del servidor"}, 500
     finally:
         session.close()
 
@@ -33,37 +41,35 @@ def create_pedido(data):
     estado = data.get("estado")
     id_cliente = data.get("id_cliente")
     if not estado or not id_cliente:
-        return None, jsonify({"error": "'estado' y 'id_cliente' son campos obligatorios", "status": 400})
+        return None, ({"error": "'estado' y 'id_cliente' son campos obligatorios"}, 400)
     try:
         pedido = Pedido(estado=estado, id_cliente=id_cliente)
         session.add(pedido)
         session.commit()
-        # Guarda los datos ANTES de cerrar la sesión
         pedido_id = pedido.id_pedido
         pedido_estado = pedido.estado
-        response = jsonify({"message": "Pedido creado correctamente", "status": 201, "id_pedido": pedido_id})
+        response = ({"message": "Pedido creado correctamente", "id_pedido": pedido_id}, 201)
         return (pedido_id, pedido_estado), response
     except Exception as e:
         session.rollback()
-        return None, jsonify({"error": str(e)}), 500
+        return None, ({"error": "Error interno del servidor"}, 500)
     finally:
         session.close()
     
 def update_pedido(idz, data):
     session = SessionLocal()
-    pedidos = session.query(Pedido).filter_by(id_pedido=idz).first()
-    if not pedidos:
-        return jsonify({"error": "Pedido no encontrado", "status": 404})
-    estado = data.get ("estado")
-    if not estado:
-        return jsonify({"error": "'estado' es un campo obligatorio", "status": 400})
-    else:
-        try:
-            pedidos.estado = estado
-            session.commit()
-            return jsonify({"message": "Pedido actualizado correctamente", "status": 200})
-        except Exception as e:
-            session.rollback()
-            return jsonify({"error": str(e)}), 500
-        finally:
-            session.close()
+    try:
+        pedido = session.query(Pedido).filter_by(id_pedido=idz).first()
+        if not pedido:
+            return {"error": "Pedido no encontrado"}, 404
+        estado = data.get("estado")
+        if not estado:
+            return {"error": "'estado' es un campo obligatorio"}, 400
+        pedido.estado = estado
+        session.commit()
+        return {"message": "Pedido actualizado correctamente"}, 200
+    except Exception as e:
+        session.rollback()
+        return {"error": "Error interno del servidor"}, 500
+    finally:
+        session.close()

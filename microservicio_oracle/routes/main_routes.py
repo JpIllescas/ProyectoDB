@@ -1,8 +1,8 @@
-from flask import Blueprint, request, current_app
-from services.cliente_service import get_clientes, create_cliente, update_cliente
-from services.producto_service import get_productos, create_producto, update_producto
-from services.pedido_service import get_pedidos, create_pedido, update_pedido
-from services.detalle_pedido_service import get_detalle_pedido, create_detalle_pedido, update_detalle_pedido
+from flask import Blueprint, request, current_app, jsonify
+from services.cliente_service import get_clientes, get_cliente_by_id, create_cliente, update_cliente
+from services.producto_service import get_productos, get_producto_by_id, create_producto, update_producto
+from services.pedido_service import get_pedidos, get_pedido_by_id, create_pedido, update_pedido
+from services.detalle_pedido_service import get_detalle_pedido, get_detalle_pedido_by_id, create_detalle_pedido, update_detalle_pedido
 from services.rabbitmq_producer import send_message
 
 main_bp = Blueprint("main", __name__)
@@ -11,51 +11,58 @@ main_bp = Blueprint("main", __name__)
 @main_bp.route("/clientes", methods=["GET"])
 def route_get_clientes():
     SessionLocal = current_app.config["SESSION_LOCAL"]
-    return get_clientes(SessionLocal)
+    data, status = get_clientes(SessionLocal)
+    return jsonify(data), status
 
 @main_bp.route("/clientes/<int:id>", methods=["GET"])
 def route_get_cliente_by_id(id):
     SessionLocal = current_app.config["SESSION_LOCAL"]
-    from services.cliente_service import get_cliente_by_id
-    return get_cliente_by_id(id, SessionLocal)
+    data, status = get_cliente_by_id(id, SessionLocal)
+    return jsonify(data), status
 
 @main_bp.route("/clientes", methods=["POST"])
 def route_create_cliente():
     SessionLocal = current_app.config["SESSION_LOCAL"]
-    return create_cliente(request.json, SessionLocal) 
+    data, status = create_cliente(request.json, SessionLocal)
+    return jsonify(data), status
 
 @main_bp.route("/clientes/<int:id>", methods=["PUT"])
 def route_update_cliente(id):
     SessionLocal = current_app.config["SESSION_LOCAL"]
-    return update_cliente(id, request.json, SessionLocal)
+    data, status = update_cliente(id, request.json, SessionLocal)
+    return jsonify(data), status
 
 # ---- PRODUCTOS ----
 @main_bp.route("/productos", methods=["GET"])
 def route_get_productos():
-    return get_productos()
+    data, status = get_productos()
+    return jsonify(data), status
 
 @main_bp.route("/productos/<int:id>", methods=["GET"])
 def route_get_producto_by_id(id):
-    from services.producto_service import get_producto_by_id
-    return get_producto_by_id(id)
+    data, status = get_producto_by_id(id)
+    return jsonify(data), status
 
 @main_bp.route("/productos", methods=["POST"])
 def route_create_producto():
-    return create_producto(request.json)
+    data, status = create_producto(request.json)
+    return jsonify(data), status
 
 @main_bp.route("/productos/<int:id>", methods=["PUT"])
 def route_update_producto(id):
-    return update_producto(id, request.json)
+    data, status = update_producto(id, request.json)
+    return jsonify(data), status
 
 # ---- PEDIDOS ----
 @main_bp.route("/pedidos", methods=["GET"])
 def route_get_pedidos():
-    return get_pedidos()
+    data, status = get_pedidos()
+    return jsonify(data), status
 
 @main_bp.route("/pedidos/<int:id>", methods=["GET"])
 def route_get_pedido_by_id(id):
-    from services.pedido_service import get_pedido_by_id
-    return get_pedido_by_id(id)
+    data, status = get_pedido_by_id(id)
+    return jsonify(data), status
 
 @main_bp.route("/pedidos", methods=["POST"])
 def route_create_pedido():
@@ -63,26 +70,31 @@ def route_create_pedido():
     if pedido_data:
         pedido_id, pedido_estado = pedido_data
         send_message("pedidos_queue", f"Pedido creado: {pedido_id}, Estado: {pedido_estado}")
-    return response
+    data, status = response
+    return jsonify(data), status
 
 @main_bp.route("/pedidos/<int:idz>", methods=["PUT"])
 def route_update_pedido(idz):
-    return update_pedido(idz, request.json)
+    data, status = update_pedido(idz, request.json)
+    return jsonify(data), status
 
 # ---- DETALLE PEDIDO ----
 @main_bp.route("/detalle_pedido", methods=["GET"])
 def route_get_detalle_pedido():
-    return get_detalle_pedido()
+    data, status = get_detalle_pedido()
+    return jsonify(data), status
 
 @main_bp.route("/detalle_pedido/<int:id>", methods=["GET"])
 def route_get_detalle_pedido_by_id(id):
-    from services.detalle_pedido_service import get_detalle_pedido_by_id
-    return get_detalle_pedido_by_id(id)
+    data, status = get_detalle_pedido_by_id(id)
+    return jsonify(data), status
 
 @main_bp.route("/detalle_pedido", methods=["POST"])
 def route_create_detalle_pedido():
-    return create_detalle_pedido(request.json)
+    data, status = create_detalle_pedido(request.json)
+    return jsonify(data), status
 
 @main_bp.route("/detalle_pedido/<int:idz>", methods=["PUT"])
 def route_update_detalle_pedido(idz):
-    return update_detalle_pedido(idz, request.json)
+    data, status = update_detalle_pedido(idz, request.json)
+    return jsonify(data), status
