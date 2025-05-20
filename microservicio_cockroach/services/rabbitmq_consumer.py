@@ -6,6 +6,13 @@ def consume_messages(queue, callback):
     credentials = pika.PlainCredentials(
         os.getenv("RABBITMQ_USER"), os.getenv("RABBITMQ_PASSWORD")
     )
+    connection = pika.BlockingConnection(
+        pika.ConnectionParameters(
+            host=os.getenv("RABBITMQ_HOST"),
+            port=int(os.getenv("RABBITMQ_PORT")),
+            credentials=credentials,
+        )
+    )
     for attempt in range(10):
         try:
             connection = pika.BlockingConnection(

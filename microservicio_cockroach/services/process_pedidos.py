@@ -6,6 +6,7 @@ from models.tracking import TrackingEvento
 
 def process_pedido(ch, method, properties, body):
     print("Mensaje recibido:", body.decode())
+    # Aquí puedes agregar lógica para guardar el mensaje en la base de datos
     max_retries = 3
     for attempt in range(max_retries):
         try:

@@ -31,6 +31,21 @@ services:
       timeout: 5s
       retries: 5
 
+  mysql-replica:
+    image: mysql:8.0
+    container_name: MySQL-replica
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: sebas123
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-psebas123"]
+      interval: 30s
+      timeout: 10s
+    volumes:
+      - mysql_data:/var/lib/mysql
+
   microservicio_oracle:
     build:
       context: ../microservicio_oracle
@@ -41,7 +56,7 @@ services:
       oracle-db:
         condition: service_healthy
       rabbitmq:
-       condition: service_healthy
+       condition: service_started
     entrypoint: >
       sh -c "sleep 120 && python app.py"
     env_file:
@@ -57,7 +72,7 @@ services:
       cockroachdb:
         condition: service_healthy
       rabbitmq:
-        condition: service_healthy
+        condition: service_started
     env_file:
       - ../microservicio_cockroach/.env
     entrypoint: >
@@ -77,20 +92,30 @@ services:
       - ../microservicio_cockroach/.env
     restart: always
 
+  micro_mysql:
+    build:
+      context: ../microservicio_mysql
+    container_name: micro_mysql
+    ports:
+      - "5003:5001"
+    depends_on:
+      mysql-replica:
+        condition: service_healthy
+      rabbitmq:
+       condition: service_started
+    entrypoint: >
+      sh -c "sleep 120 && python app.py"
+    env_file:
+      - ../mexico_mysql/.env
+
   rabbitmq:
     image: rabbitmq:3-management
-    container_name: rabbitmq
     ports:
       - "5672:5672"
-      - "15672:15672"
+      - "15672:15672"  # UI
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
-    healthcheck:
-      test: ["CMD", "rabbitmqctl", "status"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
 volumes:
   cockroach-data:
