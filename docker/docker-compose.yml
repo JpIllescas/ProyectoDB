@@ -36,11 +36,11 @@ services:
     container_name: MySQL-replica
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: sebas123
+      MYSQL_ROOT_PASSWORD:  ${MYSQL_ROOT_PASSWORD}
     ports:
       - "3307:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-psebas123"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p ${MYSQL_ROOT_PASSWORD}"]
       interval: 30s
       timeout: 10s
     volumes:
@@ -102,11 +102,11 @@ services:
       mysql-replica:
         condition: service_healthy
       rabbitmq:
-       condition: service_started
+       condition: service_healthy
     entrypoint: >
       sh -c "sleep 120 && python app.py"
     env_file:
-      - ../mexico_mysql/.env
+      - ../microservicio_mysql/.env
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -120,6 +120,7 @@ services:
 volumes:
   cockroach-data:
   oracle-db-data:
+  mysql_data:
 
 networks:
   default:
