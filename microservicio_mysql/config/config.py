@@ -20,9 +20,9 @@ try:
     DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     engine = create_engine(DATABASE_URL, echo=True)
     SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
-    print("Conexión Sucursal MySQL México exitosa")
+    print("Conexión Sucursal MySQL exitosa")
 except Exception as e:
-    print(f"Error al conectar con Sucursal MySQL México: {e}")
+    print(f"Error al conectar con Sucursal MySQL: {e}")
     engine = None
     SessionLocal = None
 

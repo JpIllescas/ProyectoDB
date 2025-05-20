@@ -16,10 +16,7 @@ services:
   cockroachdb:
     image: cockroachdb/cockroach:v23.1.11
     container_name: cockroachdb
-    command: >
-      start-single-node --insecure &&
-      sleep 5 &&
-      /cockroach/cockroach sql --insecure --execute="CREATE DATABASE IF NOT EXISTS tracking;"
+    command: start-single-node --insecure
     ports:
       - "26258:26257"
       - "8081:8080"
@@ -37,6 +34,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD:  ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: pedidos_db
     ports:
       - "3307:3306"
     healthcheck:
@@ -89,7 +87,7 @@ services:
       rabbitmq:
         condition: service_healthy
     env_file:
-      - ../microservicio_cockroach/.env
+      - ../docker/.env
     restart: always
 
   micro_mysql:
@@ -104,18 +102,24 @@ services:
       rabbitmq:
        condition: service_healthy
     entrypoint: >
-      sh -c "sleep 120 && python app.py"
+      sh -c "sleep 60 && python app.py"
     env_file:
       - ../microservicio_mysql/.env
 
   rabbitmq:
     image: rabbitmq:3-management
+    container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"  # UI
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
 volumes:
   cockroach-data:

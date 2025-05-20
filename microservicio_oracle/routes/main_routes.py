@@ -2,8 +2,8 @@ from flask import Blueprint, json, request, current_app, jsonify
 from services.cliente_service import get_clientes, get_cliente_by_id, create_cliente, update_cliente
 from services.producto_service import get_productos, get_producto_by_id, create_producto, update_producto
 from services.pedido_service import get_pedidos, get_pedido_by_id, create_pedido, update_pedido
-from services.detalle_pedido_service import get_detalle_pedido, get_detalle_pedido_by_id, create_detalle_pedido, update_detalle_pedido
-from services.rabbitmq_producer import send_message
+from services.detalle_pedido_service import get_detalles,get_detalle_by_id,create_detalle,update_detalle
+from services.rabbitmq_producer import send_message 
 
 main_bp = Blueprint("main", __name__)
 
@@ -98,20 +98,20 @@ def route_update_pedido(idz):
 # ---- DETALLE PEDIDO ----
 @main_bp.route("/detalle_pedido", methods=["GET"])
 def route_get_detalle_pedido():
-    data, status = get_detalle_pedido()
+    data, status = get_detalles()
     return jsonify(data), status
 
 @main_bp.route("/detalle_pedido/<int:id>", methods=["GET"])
 def route_get_detalle_pedido_by_id(id):
-    data, status = get_detalle_pedido_by_id(id)
+    data, status = get_detalle_by_id(id)
     return jsonify(data), status
 
 @main_bp.route("/detalle_pedido", methods=["POST"])
 def route_create_detalle_pedido():
-    data, status = create_detalle_pedido(request.json)
+    data, status = create_detalle(request.json)
     return jsonify(data), status
 
 @main_bp.route("/detalle_pedido/<int:idz>", methods=["PUT"])
 def route_update_detalle_pedido(idz):
-    data, status = update_detalle_pedido(idz, request.json)
+    data, status = update_detalle(idz, request.json)
     return jsonify(data), status
