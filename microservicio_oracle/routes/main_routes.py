@@ -1,4 +1,4 @@
-from flask import Blueprint, request, current_app, jsonify
+from flask import Blueprint, json, request, current_app, jsonify
 from services.cliente_service import get_clientes, get_cliente_by_id, create_cliente, update_cliente
 from services.producto_service import get_productos, get_producto_by_id, create_producto, update_producto
 from services.pedido_service import get_pedidos, get_pedido_by_id, create_pedido, update_pedido
@@ -69,13 +69,30 @@ def route_create_pedido():
     pedido_data, response = create_pedido(request.json)
     if pedido_data:
         pedido_id, pedido_estado = pedido_data
-        send_message("pedidos_queue", f"Pedido creado: {pedido_id}, Estado: {pedido_estado}")
+        # Incluye más datos relevantes
+        message = {
+            "evento": "pedido_creado",
+            "id_pedido": pedido_id,
+            "estado": pedido_estado,
+            "id_cliente": request.json.get("id_cliente"),
+            "fecha": request.json.get("fecha"),  # Si la tienes
+            # Agrega más campos si es necesario
+        }
+        send_message("pedidos_queue", json.dumps(message))
     data, status = response
     return jsonify(data), status
 
 @main_bp.route("/pedidos/<int:idz>", methods=["PUT"])
 def route_update_pedido(idz):
     data, status = update_pedido(idz, request.json)
+    if status == 200:
+        message = {
+            "evento": "pedido_actualizado",
+            "id_pedido": idz,
+            "estado": request.json.get("estado"),
+            # Agrega más campos si es necesario
+        }
+        send_message("pedidos_queue", json.dumps(message))
     return jsonify(data), status
 
 # ---- DETALLE PEDIDO ----

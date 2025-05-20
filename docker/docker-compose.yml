@@ -41,7 +41,7 @@ services:
       oracle-db:
         condition: service_healthy
       rabbitmq:
-       condition: service_started
+       condition: service_healthy
     entrypoint: >
       sh -c "sleep 120 && python app.py"
     env_file:
@@ -57,20 +57,40 @@ services:
       cockroachdb:
         condition: service_healthy
       rabbitmq:
-        condition: service_started
+        condition: service_healthy
     env_file:
       - ../microservicio_cockroach/.env
     entrypoint: >
       sh -c "sleep 30 && python app.py"
 
+  consumidor_pedidos:
+    build:
+      context: ../microservicio_cockroach
+    container_name: consumidor_pedidos
+    command: python -m services.process_pedidos
+    depends_on:
+      cockroachdb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    env_file:
+      - ../microservicio_cockroach/.env
+    restart: always
+
   rabbitmq:
     image: rabbitmq:3-management
+    container_name: rabbitmq
     ports:
       - "5672:5672"
-      - "15672:15672"  # UI
+      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   cockroach-data:

@@ -7,6 +7,6 @@ tracking_bp = Blueprint ("tracking", __name__)
 def route_get_tracking():
     return get_all_tracking()
 
-@tracking_bp.route("/create/tracking", methods=["POST"])
+@tracking_bp.route("/tracking", methods=["POST"])
 def route_create_tracking():
     return create_tracking(request.json)

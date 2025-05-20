@@ -6,7 +6,15 @@ def get_all_tracking():
     session = SessionLocal()
     try:
         eventos = session.query(TrackingEvento).all()
-        return jsonify([{"id": e.id, "id_pedido": e.id_pedido, "estado": e.ubicacion, "timestamp": e.timestamp.isoformat()} for e in eventos])
+        return jsonify([
+            {
+                "id": e.id,
+                "id_pedido": e.id_pedido,
+                "estado": e.estado,         
+                "ubicacion": e.ubicacion,
+                "timestamp": e.timestamp.isoformat()
+            } for e in eventos
+        ])
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
@@ -31,4 +39,3 @@ def create_tracking(data):
         return jsonify({"error": str(e)}), 500
     finally:
         session.close()
-        
