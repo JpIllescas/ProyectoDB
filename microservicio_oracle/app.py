@@ -1,8 +1,10 @@
 from flask import Flask
+from flask_cors import CORS
 from routes import main_routes
 from config.config import get_db_connection, Base
 
 app = Flask(__name__)
+CORS(app)
 
 engine, SessionLocal, _ = get_db_connection()
 
@@ -15,4 +17,4 @@ else:
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=3000, host="0.0.0.0") 
+    app.run(debug=True, port=5001, host="0.0.0.0") 

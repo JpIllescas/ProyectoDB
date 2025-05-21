@@ -1,4 +1,5 @@
 services:
+  # Bases de datos y broker
   oracle-db:
     image: container-registry.oracle.com/database/express:21.3.0-xe
     container_name: oracle-db
@@ -17,7 +18,7 @@ services:
     image: cockroachdb/cockroach:v23.1.11
     container_name: cockroachdb
     entrypoint: >
-      sh -c "cockroach start-single-node --insecure & sleep 10 && cockroach sql --insecure --host=localhost -e 'CREATE DATABASE IF NOT EXISTS tracking;' && tail -f /dev/null"
+      sh -c "cockroach start-single-node --insecure & sleep 60 && cockroach sql --insecure --host=localhost -e 'CREATE DATABASE IF NOT EXISTS tracking;' && tail -f /dev/null"
     ports:
       - "26258:26257"
       - "8081:8080"
@@ -39,73 +40,11 @@ services:
     ports:
       - "3307:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p ${MYSQL_ROOT_PASSWORD}"]
-      interval: 30s
-      timeout: 10s
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 60s
+      timeout: 20s
     volumes:
       - mysql_data:/var/lib/mysql
-
-  microservicio_oracle:
-    build:
-      context: ../microservicio_oracle
-    container_name: microservicio_oracle
-    ports:
-      - "5001:3000"
-    depends_on:
-      oracle-db:
-        condition: service_healthy
-      rabbitmq:
-       condition: service_healthy
-    entrypoint: >
-      sh -c "sleep 120 && python app.py"
-    env_file:
-      - ../microservicio_oracle/.env
-
-  microservicio_cockroach:
-    build:
-      context: ../microservicio_cockroach
-    container_name: microservicio_cockroach
-    ports:
-      - "5002:5000"
-    depends_on:
-      cockroachdb:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    env_file:
-      - ../microservicio_cockroach/.env
-    entrypoint: >
-      sh -c "sleep 30 && python app.py"
-
-  consumidor_pedidos:
-    build:
-      context: ../microservicio_cockroach
-    container_name: consumidor_pedidos
-    command: python -m services.process_pedidos
-    depends_on:
-      cockroachdb:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    env_file:
-      - ../microservicio_cockroach/.env
-    restart: always
-
-  micro_mysql:
-    build:
-      context: ../microservicio_mysql
-    container_name: micro_mysql
-    ports:
-      - "5003:5001"
-    depends_on:
-      mysql-replica:
-        condition: service_healthy
-      rabbitmq:
-       condition: service_healthy
-    entrypoint: >
-      sh -c "sleep 60 && python app.py"
-    env_file:
-      - ../microservicio_mysql/.env
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -121,6 +60,70 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+
+  # Microservicios
+  microservicio_oracle:
+    build:
+      context: ../microservicio_oracle
+    container_name: microservicio_oracle
+    ports:
+      - "5001:5001"
+    depends_on:
+      oracle-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    entrypoint: >
+      sh -c "sleep 120 && python app.py"
+    env_file:
+      - ../microservicio_oracle/.env
+
+  microservicio_cockroach:
+    build:
+      context: ../microservicio_cockroach
+    container_name: microservicio_cockroach
+    ports:
+      - "5002:5002"
+    depends_on:
+      cockroachdb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    entrypoint: >
+      sh -c "sleep 30 && python app.py"
+    env_file:
+      - ../microservicio_cockroach/.env
+
+  micro_mysql:
+    build:
+      context: ../microservicio_mysql
+    container_name: micro_mysql
+    ports:
+      - "5003:5003"
+    depends_on:
+      mysql-replica:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    entrypoint: >
+      sh -c "sleep 30 && python app.py"
+    env_file:
+      - ../microservicio_mysql/.env
+
+  # Consumidor RabbitMQ para Cockroach
+  consumidor_pedidos:
+    build:
+      context: ../microservicio_cockroach
+    container_name: consumidor_pedidos
+    command: python -m services.process_pedidos
+    depends_on:
+      cockroachdb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    env_file:
+      - ../microservicio_cockroach/.env
+    restart: always
 
 volumes:
   cockroach-data:

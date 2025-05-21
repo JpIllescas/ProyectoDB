@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Exponer el puerto por donde corre Flask
-EXPOSE 5001
+EXPOSE 5003
 
 # Comando para iniciar el microservicio
 CMD ["python", "app.py"]
