@@ -16,7 +16,8 @@ services:
   cockroachdb:
     image: cockroachdb/cockroach:v23.1.11
     container_name: cockroachdb
-    command: start-single-node --insecure
+    entrypoint: >
+      sh -c "cockroach start-single-node --insecure & sleep 10 && cockroach sql --insecure --host=localhost -e 'CREATE DATABASE IF NOT EXISTS tracking;' && tail -f /dev/null"
     ports:
       - "26258:26257"
       - "8081:8080"
@@ -56,7 +57,7 @@ services:
       rabbitmq:
        condition: service_healthy
     entrypoint: >
-      sh -c "sleep 100 && python app.py"
+      sh -c "sleep 120 && python app.py"
     env_file:
       - ../microservicio_oracle/.env
 

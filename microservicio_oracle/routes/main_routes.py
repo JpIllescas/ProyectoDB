@@ -35,83 +35,74 @@ def route_update_cliente(id):
 # ---- PRODUCTOS ----
 @main_bp.route("/productos", methods=["GET"])
 def route_get_productos():
-    data, status = get_productos()
+    SessionLocal = current_app.config["SESSION_LOCAL"]
+    data, status = get_productos(SessionLocal)
     return jsonify(data), status
 
 @main_bp.route("/productos/<int:id>", methods=["GET"])
 def route_get_producto_by_id(id):
-    data, status = get_producto_by_id(id)
+    SessionLocal = current_app.config["SESSION_LOCAL"]
+    data, status = get_producto_by_id(id, SessionLocal)
     return jsonify(data), status
 
 @main_bp.route("/productos", methods=["POST"])
 def route_create_producto():
-    data, status = create_producto(request.json)
+    SessionLocal = current_app.config["SESSION_LOCAL"]
+    data, status = create_producto(request.json, SessionLocal)
     return jsonify(data), status
 
 @main_bp.route("/productos/<int:id>", methods=["PUT"])
 def route_update_producto(id):
-    data, status = update_producto(id, request.json)
+    SessionLocal = current_app.config["SESSION_LOCAL"]
+    data, status = update_producto(id, request.json, SessionLocal)
     return jsonify(data), status
 
 # ---- PEDIDOS ----
 @main_bp.route("/pedidos", methods=["GET"])
 def route_get_pedidos():
-    data, status = get_pedidos()
+    SessionLocal = current_app.config["SESSION_LOCAL"]
+    data, status = get_pedidos(SessionLocal)
     return jsonify(data), status
 
 @main_bp.route("/pedidos/<int:id>", methods=["GET"])
 def route_get_pedido_by_id(id):
-    data, status = get_pedido_by_id(id)
+    SessionLocal = current_app.config["SESSION_LOCAL"]
+    data, status = get_pedido_by_id(id, SessionLocal)
     return jsonify(data), status
 
 @main_bp.route("/pedidos", methods=["POST"])
 def route_create_pedido():
-    pedido_data, response = create_pedido(request.json)
-    if pedido_data:
-        pedido_id, pedido_estado = pedido_data
-        # Incluye más datos relevantes
-        message = {
-            "evento": "pedido_creado",
-            "id_pedido": pedido_id,
-            "estado": pedido_estado,
-            "id_cliente": request.json.get("id_cliente"),
-            "fecha": request.json.get("fecha"),  # Si la tienes
-            # Agrega más campos si es necesario
-        }
-        send_message("pedidos_queue", json.dumps(message))
-    data, status = response
+    SessionLocal = current_app.config["SESSION_LOCAL"]
+    data, status = create_pedido(request.json, SessionLocal)
     return jsonify(data), status
 
 @main_bp.route("/pedidos/<int:idz>", methods=["PUT"])
 def route_update_pedido(idz):
-    data, status = update_pedido(idz, request.json)
-    if status == 200:
-        message = {
-            "evento": "pedido_actualizado",
-            "id_pedido": idz,
-            "estado": request.json.get("estado"),
-            # Agrega más campos si es necesario
-        }
-        send_message("pedidos_queue", json.dumps(message))
+    SessionLocal = current_app.config["SESSION_LOCAL"]
+    data, status = update_pedido(idz, request.json, SessionLocal)
     return jsonify(data), status
 
 # ---- DETALLE PEDIDO ----
 @main_bp.route("/detalle_pedido", methods=["GET"])
 def route_get_detalle_pedido():
-    data, status = get_detalles()
+    SessionLocal = current_app.config["SESSION_LOCAL"]
+    data, status = get_detalles(SessionLocal)
     return jsonify(data), status
 
 @main_bp.route("/detalle_pedido/<int:id>", methods=["GET"])
 def route_get_detalle_pedido_by_id(id):
-    data, status = get_detalle_by_id(id)
+    SessionLocal = current_app.config["SESSION_LOCAL"]
+    data, status = get_detalle_by_id(id, SessionLocal)
     return jsonify(data), status
 
 @main_bp.route("/detalle_pedido", methods=["POST"])
 def route_create_detalle_pedido():
-    data, status = create_detalle(request.json)
+    SessionLocal = current_app.config["SESSION_LOCAL"]
+    data, status = create_detalle(request.json, SessionLocal)
     return jsonify(data), status
 
 @main_bp.route("/detalle_pedido/<int:idz>", methods=["PUT"])
 def route_update_detalle_pedido(idz):
-    data, status = update_detalle(idz, request.json)
+    SessionLocal = current_app.config["SESSION_LOCAL"]
+    data, status = update_detalle(idz, request.json, SessionLocal)
     return jsonify(data), status

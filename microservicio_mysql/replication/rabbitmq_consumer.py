@@ -1,5 +1,6 @@
 import pika
 import json
+import os
 from sqlalchemy.orm import sessionmaker
 from models import Cliente, Producto, Pedido, DetallePedido
 from config.config import engine
@@ -71,8 +72,12 @@ def iniciar_consumidor():
     try:
         print("[DEBUG] Intentando conectar a RabbitMQ...")
         connection = pika.BlockingConnection(pika.ConnectionParameters(
-            host='rabbitmq',
-            credentials=pika.PlainCredentials('guest', 'sebas123'),
+            host=os.getenv("RABBITMQ_HOST"),
+            port=int(os.getenv("RABBITMQ_PORT")),
+            credentials=pika.PlainCredentials(
+                os.getenv("RABBITMQ_USER"),
+                os.getenv("RABBITMQ_PASSWORD")
+            ),
             heartbeat=600,
             blocked_connection_timeout=300
         ))
