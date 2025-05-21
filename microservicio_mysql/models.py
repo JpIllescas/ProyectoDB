@@ -9,7 +9,6 @@ class Cliente(Base):
     id_cliente = Column(Integer, primary_key=True)
     nombre = Column(String(100), nullable=False)
     telefono = Column(String(15), nullable=False)
-    direccion = Column(String(300), nullable=False)
     email = Column(String(100), nullable=False, unique=True)  # Cambiado de gmail a email
 
     pedidos = relationship("Pedido", back_populates="cliente")

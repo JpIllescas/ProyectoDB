@@ -11,7 +11,6 @@ def get_clientes(SessionLocal):
                 "id_cliente": c.id_cliente,
                 "nombre": c.nombre,
                 "telefono": c.telefono,
-                "direccion": c.direccion,
                 "email": c.email
             } for c in clientes
         ], 200
@@ -30,7 +29,6 @@ def get_cliente_by_id(id, SessionLocal):
                 "id_cliente": cliente.id_cliente,
                 "nombre": cliente.nombre,
                 "telefono": cliente.telefono,
-                "direccion": cliente.direccion,
                 "email": cliente.email
             }, 200
         else:
@@ -45,17 +43,15 @@ def create_cliente(data, SessionLocal):
     session = SessionLocal()
     nombre = data.get("nombre")
     telefono = data.get("telefono")
-    direccion = data.get("direccion")
     email = data.get("email")
 
-    if not all([nombre, telefono, direccion, email]):
-        return {"error": "Todos los campos son obligatorios: nombre, apellido, telefono, direccion, email"}, 400
+    if not all([nombre, telefono, email]):
+        return {"error": "Todos los campos son obligatorios: nombre, apellido, telefono, email"}, 400
 
     try:
         cliente = Cliente(
             nombre=nombre,
             telefono=telefono,
-            direccion=direccion,
             email=email
         )
         session.add(cliente)
@@ -77,12 +73,10 @@ def update_cliente(id, data, SessionLocal):
 
         nombre = data.get("nombre")
         telefono = data.get("telefono")
-        direccion = data.get("direccion")
         email = data.get("email")
 
         if nombre: cliente.nombre = nombre
         if telefono: cliente.telefono = telefono
-        if direccion: cliente.direccion = direccion
         if email: cliente.email = email
 
         session.commit()

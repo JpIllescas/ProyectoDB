@@ -6,7 +6,7 @@ import os
 user = os.getenv("RABBITMQ_USER")
 password = os.getenv("RABBITMQ_PASSWORD")
 host = os.getenv("RABBITMQ_HOST")
-port = int(os.getenv("RABBITMQ_PORT", 5672))
+port = int(os.getenv("RABBITMQ_PORT"))
 
 def publicar_evento(model, data, action):
     try:
