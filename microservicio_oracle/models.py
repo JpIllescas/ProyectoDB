@@ -10,7 +10,7 @@ class Cliente(Base):
 
     id_cliente = Column(Integer, primary_key=True)
     nombre = Column(String(100), nullable=False)
-    gmail = Column(String(100), nullable=False, unique=True)
+    email = Column(String(100), nullable=False, unique=True)
     telefono = Column(String(15), nullable=False)
 
     pedidos = relationship("Pedido", back_populates="cliente")

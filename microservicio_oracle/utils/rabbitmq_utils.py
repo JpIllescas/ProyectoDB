@@ -1,6 +1,12 @@
 # utils/rabbitmq_utils.py
 import pika
 import json
+import os
+
+user = os.getenv("RABBITMQ_USER")
+password = os.getenv("RABBITMQ_PASSWORD")
+host = os.getenv("RABBITMQ_HOST")
+port = int(os.getenv("RABBITMQ_PORT", 5672))
 
 def publicar_evento(model, data, action):
     try:
@@ -11,8 +17,9 @@ def publicar_evento(model, data, action):
         }
 
         connection = pika.BlockingConnection(pika.ConnectionParameters(
-            host='rabbitmq',
-            credentials=pika.PlainCredentials('${RABBITMQ_USER}', '${RABBITMQ_PASSWORD}'),
+            host=host,
+            port=port,
+            credentials=pika.PlainCredentials(user, password),
         ))
         channel = connection.channel()
         # Declarar el exchange tipo fanouts

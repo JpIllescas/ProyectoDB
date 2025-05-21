@@ -53,16 +53,14 @@ def create_pedido(data, SessionLocal):
         )
         session.add(pedido)
         session.commit()
-        publicar_evento(
-            model="pedidos",
-            data={
-                "id_pedido": pedido.id_pedido,
-                "fecha": pedido.fecha.isoformat() if pedido.fecha else None,
-                "estado": pedido.estado,
-                "id_cliente": pedido.id_cliente
-            },
-            action="create"
-        )
+        #RabbitMQ
+        pedido_data = {
+            "id_pedido": pedido.id_pedido,
+            "fecha": pedido.fecha.isoformat() if pedido.fecha else None,
+            "estado": pedido.estado,
+            "id_cliente": pedido.id_cliente            
+        }
+        publicar_evento("pedidos",pedido_data,action="create")
         return {"message": "Pedido creado correctamente", "id_pedido": pedido.id_pedido}, 201
     except Exception as e:
         session.rollback()
@@ -86,16 +84,14 @@ def update_pedido(id, data, SessionLocal):
         if fecha:
             pedido.fecha = date.fromisoformat(fecha)
         session.commit()
-        publicar_evento(
-            model="pedidos",
-            data={
-                "id_pedido": pedido.id_pedido,
-                "fecha": pedido.fecha.isoformat() if pedido.fecha else None,
-                "estado": pedido.estado,
-                "id_cliente": pedido.id_cliente
-            },
-            action="update"
-        )
+        #RabbitMQ
+        pedido_data = {
+            "id_pedido": pedido.id_pedido,
+            "fecha": pedido.fecha.isoformat() if pedido.fecha else None,
+            "estado": pedido.estado,
+            "id_cliente": pedido.id_cliente            
+        }
+        publicar_evento("pedidos",pedido_data,action="update")
         return {"message": "Pedido actualizado correctamente"}, 200
     except Exception as e:
         session.rollback()
@@ -111,11 +107,8 @@ def delete_pedido(id, SessionLocal):
             return {"error": "Pedido no encontrado"}, 404
         session.delete(pedido)
         session.commit()
-        publicar_evento(
-            model="pedidos",
-            data={"id_pedido": id},
-            action="delete"
-        )
+        #evento de eliminacion
+        publicar_evento("pedidos",{"id_pedido": id},action="delete")
         return {"message": "Pedido eliminado correctamente"}, 200
     except Exception as e:
         session.rollback()

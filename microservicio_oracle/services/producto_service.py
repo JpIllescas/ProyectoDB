@@ -47,16 +47,14 @@ def create_producto(data, SessionLocal):
         producto = Producto(nombre=nombre, precio=precio, stock=stock)
         session.add(producto)
         session.commit()
-        publicar_evento(
-            model="productos",
-            data={
+        #rabbitMQ
+        producto_data={
                 "id_producto": producto.id_producto,
                 "nombre": producto.nombre,
                 "precio": float(producto.precio),
                 "stock": producto.stock
-            },
-            action="create"
-        )
+            }
+        publicar_evento("productos",producto_data,action="create")
         return {"message": "Producto creado correctamente", "id_producto": producto.id_producto}, 201
     except Exception as e:
         session.rollback()
@@ -79,16 +77,14 @@ def update_producto(id, data, SessionLocal):
         producto.precio = precio
         producto.stock = stock
         session.commit()
-        publicar_evento(
-            model="productos",
-            data={
+        #rabbitMQ
+        producto_data={
                 "id_producto": producto.id_producto,
                 "nombre": producto.nombre,
                 "precio": float(producto.precio),
                 "stock": producto.stock
-            },
-            action="update"
-        )
+            }
+        publicar_evento("productos",producto_data,action="update")
         return {"message": "Producto actualizado correctamente"}, 200
     except Exception as e:
         session.rollback()
@@ -104,11 +100,7 @@ def delete_producto(id, SessionLocal):
             return {"error": "Producto no encontrado"}, 404
         session.delete(producto)
         session.commit()
-        publicar_evento(
-            model="productos",
-            data={"id_producto": id},
-            action="delete"
-        )
+        publicar_evento("productos",{"id_producto": id},action="delete")
         return {"message": "Producto eliminado correctamente"}, 200
     except Exception as e:
         session.rollback()

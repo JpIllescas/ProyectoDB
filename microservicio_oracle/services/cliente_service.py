@@ -10,7 +10,7 @@ def get_clientes(SessionLocal):
             {
                 "id_cliente": c.id_cliente,
                 "nombre": c.nombre,
-                "gmail": c.gmail,
+                "email": c.email,
                 "telefono": c.telefono
             } for c in clientes
         ], 200
@@ -28,7 +28,7 @@ def get_cliente_by_id(id, SessionLocal):
             return {
                 "id_cliente": cliente.id_cliente,
                 "nombre": cliente.nombre,
-                "gmail": cliente.gmail,
+                "email": cliente.email,
                 "telefono": cliente.telefono
             }, 200
         else:
@@ -45,23 +45,19 @@ def create_cliente(data, SessionLocal):
     email = data.get("email")
     telefono = data.get("telefono")
     if not nombre or not email or not telefono: 
-        return {"error": "'nombre', 'gmail' y 'telefono' son campos obligatorios"}, 400
+        return {"error": "'nombre', 'email' y 'telefono' son campos obligatorios"}, 400
     try: 
         cliente = Cliente(nombre=nombre, email=email, telefono=telefono)
         session.add(cliente)
         session.commit()
-        # Publicar evento a RabbitMQ
-        publicar_evento(
-            model="clientes",
-            data={
+        # Publicar evento en RabbitMQ
+        cliente_data = {
                 "id_cliente": cliente.id_cliente,
                 "nombre": cliente.nombre,
-                "telefono": cliente.telefono,
-                "email": cliente.email,  # El consumidor MySQL espera "email"
-                # Si tienes "direccion", agrégala aquí
-            },
-            action="create"
-        )
+                "email": cliente.email,
+                "telefono": cliente.telefono
+        }
+        publicar_evento("clientes",cliente_data,action="create") 
         return {"message": "Cliente creado correctamente", "id_cliente": cliente.id_cliente}, 201
     except Exception as e:
         session.rollback()
@@ -79,11 +75,19 @@ def update_cliente(id, data, SessionLocal):
         email = data.get("email")
         telefono = data.get("telefono")
         if not nombre or not email or not telefono:
-            return {"error": "'nombre', 'gmail' y 'telefono' son campos obligatorios"}, 400
+            return {"error": "'nombre', 'email' y 'telefono' son campos obligatorios"}, 400
         cliente.nombre = nombre
         cliente.email = email
         cliente.telefono = telefono 
         session.commit()
+        
+        cliente_data={
+            "id_cliente": cliente.id_cliente,
+            "nombre": cliente.nombre,
+            "email": cliente.email,
+            "telefono": cliente.telefono
+        }
+        publicar_evento("clientes",cliente_data,action="update") 
         return {"message": "Cliente actualizado correctamente"}, 200
     except Exception as e:
         session.rollback()
@@ -100,12 +104,8 @@ def delete_cliente(id, SessionLocal):
             return {"error": "Cliente no encontrado"}, 404
         session.delete(cliente)
         session.commit()
-        # Publicar evento a RabbitMQ
-        publicar_evento(
-            model="clientes",
-            data={"id_cliente": id},
-            action="delete"
-        )
+        # Publicar evento de eliminación
+        publicar_evento("clientes",{"id_cliente": id}, action="delete")
         return {"message": "Cliente eliminado correctamente"}, 200
     except Exception as e:
         session.rollback()

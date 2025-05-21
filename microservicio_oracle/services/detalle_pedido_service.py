@@ -51,16 +51,14 @@ def create_detalle(data, SessionLocal):
         )
         session.add(detalle)
         session.commit()
-        publicar_evento(
-            model="detalle_pedido",
-            data={
-                "id_detalle": detalle.id_detalle,
-                "id_pedido": detalle.id_pedido,
-                "id_producto": detalle.id_producto,
-                "cantidad": detalle.cantidad
-            },
-            action="create"
-        )
+        #RABBITMQ        
+        det_pedido_data = {
+            "id_detalle": detalle.id_detalle,
+            "id_pedido": detalle.id_pedido,
+            "id_producto": detalle.id_producto,
+            "cantidad": detalle.cantidad
+        }
+        publicar_evento("detalle_pedido", det_pedido_data, action="create")
         return {"message": "Detalle creado correctamente", "id_detalle": detalle.id_detalle}, 201
     except Exception as e:
         session.rollback()
@@ -83,37 +81,15 @@ def update_detalle(id, data, SessionLocal):
         detalle.id_producto = id_producto
         detalle.cantidad = cantidad
         session.commit()
-        publicar_evento(
-            model="detalle_pedido",
-            data={
-                "id_detalle": detalle.id_detalle,
-                "id_pedido": detalle.id_pedido,
-                "id_producto": detalle.id_producto,
-                "cantidad": detalle.cantidad
-            },
-            action="update"
-        )
+        #RABBITMQ        
+        det_pedido_data = {
+            "id_detalle": detalle.id_detalle,
+            "id_pedido": detalle.id_pedido,
+            "id_producto": detalle.id_producto,
+            "cantidad": detalle.cantidad
+        }
+        publicar_evento("detalle_pedido", det_pedido_data, action="update")
         return {"message": "Detalle actualizado correctamente"}, 200
-    except Exception as e:
-        session.rollback()
-        return {"error": "Error interno del servidor"}, 500
-    finally:
-        session.close()
-
-def delete_detalle(id, SessionLocal):
-    session = SessionLocal()
-    try:
-        detalle = session.query(DetallePedido).filter_by(id_detalle=id).first()
-        if not detalle:
-            return {"error": "Detalle no encontrado"}, 404
-        session.delete(detalle)
-        session.commit()
-        publicar_evento(
-            model="detalle_pedido",
-            data={"id_detalle": id},
-            action="delete"
-        )
-        return {"message": "Detalle eliminado correctamente"}, 200
     except Exception as e:
         session.rollback()
         return {"error": "Error interno del servidor"}, 500

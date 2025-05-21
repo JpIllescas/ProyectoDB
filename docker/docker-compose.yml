@@ -54,9 +54,9 @@ services:
       oracle-db:
         condition: service_healthy
       rabbitmq:
-       condition: service_started
+       condition: service_healthy
     entrypoint: >
-      sh -c "sleep 120 && python app.py"
+      sh -c "sleep 100 && python app.py"
     env_file:
       - ../microservicio_oracle/.env
 
@@ -70,7 +70,7 @@ services:
       cockroachdb:
         condition: service_healthy
       rabbitmq:
-        condition: service_started
+        condition: service_healthy
     env_file:
       - ../microservicio_cockroach/.env
     entrypoint: >
@@ -87,7 +87,7 @@ services:
       rabbitmq:
         condition: service_healthy
     env_file:
-      - ../docker/.env
+      - ../microservicio_cockroach/.env
     restart: always
 
   micro_mysql:
