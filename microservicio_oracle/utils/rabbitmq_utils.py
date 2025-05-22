@@ -11,9 +11,9 @@ port = int(os.getenv("RABBITMQ_PORT"))
 def publicar_evento(model, data, action):
     try:
         mensaje = {
-            "model": model,
-            "action": action,
-            "data": data
+            "model": model, #tabla
+            "action": action, #create, update, delete
+            "data": data #informacion del registro
         }
 
         connection = pika.BlockingConnection(pika.ConnectionParameters(

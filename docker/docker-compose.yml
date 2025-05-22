@@ -110,21 +110,6 @@ services:
     env_file:
       - ../microservicio_mysql/.env
 
-  # Consumidor RabbitMQ para Cockroach
-  consumidor_pedidos:
-    build:
-      context: ../microservicio_cockroach
-    container_name: consumidor_pedidos
-    command: python -m services.process_pedidos
-    depends_on:
-      cockroachdb:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    env_file:
-      - ../microservicio_cockroach/.env
-    restart: always
-
 volumes:
   cockroach-data:
   oracle-db-data:

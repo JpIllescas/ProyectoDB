@@ -2,7 +2,7 @@ import pika
 import json
 import os
 from sqlalchemy.orm import sessionmaker
-from models import Cliente, Producto, Pedido, DetallePedido
+from models.tracking import Cliente, Pedido
 from config.config import engine
 
 # Crea la sesión de base de datos
@@ -18,9 +18,9 @@ def callback(ch, method, properties, body):
         try:
             modelo_clase = {
                 "clientes": Cliente,
-                "productos": Producto,
+#                "productos": Producto,
                 "pedidos": Pedido,
-                "detalle_pedido": DetallePedido
+ #               "detalle_pedido": DetallePedido
             }
             if model not in modelo_clase:
                 print(f"[WARN] Modelo no soportado: {model}")
@@ -30,9 +30,9 @@ def callback(ch, method, properties, body):
             # Determinar la clave primaria según el modelo
             pk_field = {
                 "clientes": "id_cliente",
-                "productos": "id_producto",
+  #              "productos": "id_producto",
                 "pedidos": "id_pedido",
-                "detalle_pedido": "id_detalle"
+   #             "detalle_pedido": "id_detalle"
             }[model]
             pk = model_data[pk_field]
             existente = session.query(modelo_clase[model]).filter_by(**{pk_field: pk}).first()
@@ -88,7 +88,7 @@ def iniciar_consumidor():
         # Declarar el exchange tipo fanout
         channel.exchange_declare(exchange='replicacion_fanout', exchange_type='fanout', durable=True)
         # Declarar una cola única para esta sucursal (puedes personalizar el nombre)
-        queue_name = 'replicacion_mysql'
+        queue_name = 'replicacion_cockroach'
         channel.queue_declare(queue=queue_name, durable=True)
         # Enlazar la cola al exchange fanout
         channel.queue_bind(exchange='replicacion_fanout', queue=queue_name)
