@@ -1,13 +1,45 @@
-import axios from 'axios';
+/*
+1) API - frontend/src/api/clientes.js
+   - Añadir funciones: getClienteById e updateCliente
+*/
 
-const API = import.meta.env.VITE_API_ORACLE;
+// frontend/src/api/clientes.js
+const BASE = import.meta.env.VITE_API_ORACLE;
 
-export const getClientes = async () => {
-  const res = await axios.get(`${API}/clientes`);
-  return res.data;
-};
+export async function getClientes() {
+  const res = await fetch(`${BASE}/clientes`);
+  if (!res.ok) throw new Error('Error al obtener clientes');
+  return res.json();
+}
 
-export const crearCliente = async (data) => {
-  const res = await axios.post(`${API}/clientes`, data);
-  return res.data;
-};
+export async function getClienteById(id) {
+  const res = await fetch(`${BASE}/clientes/${id}`);
+  if (!res.ok) throw new Error('Error al obtener el cliente');
+  return res.json();
+}
+
+export async function createCliente(cliente) {
+  const res = await fetch(`${BASE}/clientes`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(cliente),
+  });
+  if (!res.ok) throw new Error('Error al crear cliente');
+  return res.json();
+}
+
+export async function updateCliente(id, cliente) {
+  const res = await fetch(`${BASE}/clientes/${id}`, {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(cliente),
+  });
+  if (!res.ok) throw new Error('Error al actualizar cliente');
+  return res.json();
+}
+
+export async function deleteCliente(id) {
+  const res = await fetch(`${BASE}/clientes/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Error al eliminar cliente');
+  return res.json();
+}
