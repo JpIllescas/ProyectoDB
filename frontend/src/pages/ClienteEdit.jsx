@@ -1,8 +1,3 @@
-/*
-4) Página de edición - frontend/src/pages/ClienteEdit.jsx
-   - Formulario para editar, carga datos, actualiza y redirige
-*/
-
 // frontend/src/pages/ClienteEdit.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';

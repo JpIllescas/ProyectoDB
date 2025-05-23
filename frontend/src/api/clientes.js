@@ -1,8 +1,3 @@
-/*
-1) API - frontend/src/api/clientes.js
-   - Añadir funciones: getClienteById e updateCliente
-*/
-
 // frontend/src/api/clientes.js
 const BASE = import.meta.env.VITE_API_ORACLE;
 
