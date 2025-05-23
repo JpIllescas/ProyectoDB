@@ -40,3 +40,41 @@ def create_tracking(data, SessionLocal):
         return {"error": str(e)}, 500
     finally:
         session.close()
+
+def update_tracking (data, SessionLocal):
+    session = SessionLocal()
+    id = data.get("id")
+    estado = data.get("estado")
+    ubicacion = data.get("ubicacion")
+    
+    if not id or not estado or not ubicacion:
+        return {"error": "Los campos 'id', 'estado' y 'ubicacion' son obligatorios"}, 400
+
+    try:
+        evento = session.query(TrackingEvento).filter(TrackingEvento.id == id).first()
+        if not evento:
+            return {"error": "No existe el evento de tracking con el id {}".format(id)}, 404
+        evento.estado = estado
+        evento.ubicacion = ubicacion
+        session.commit()
+        return {"message": "Evento de tracking actualizado correctamente"}, 200
+    except Exception as e:
+        session.rollback()
+        return {"error": str(e)}, 500
+    finally:
+        session.close()
+        
+def delete_tracking(id, SessionLocal):
+    session = SessionLocal()
+    try:
+        evento = session.query(TrackingEvento).filter(TrackingEvento.id == id).first()
+        if not evento:
+            return {"error": "No existe el evento de tracking con el id {}".format(id)}, 404
+        session.delete(evento)
+        session.commit()
+        return {"message": "Evento de tracking eliminado correctamente"}, 200
+    except Exception as e:
+        session.rollback()
+        return {"error": str(e)}, 500
+    finally:
+        session.close()

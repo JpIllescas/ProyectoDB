@@ -12,10 +12,15 @@ export default function ClienteCard({ cliente, onDelete }) {
 
   const handleDelete = async () => {
     if (!window.confirm(`¿Eliminar cliente ${cliente.nombre}?`)) return;
-    await deleteCliente(cliente.id_cliente);
-    onDelete(cliente.id_cliente);
+    try {
+      await deleteCliente(cliente.id_cliente);
+      onDelete(cliente.id_cliente);
+    } catch (error) {
+      console.error('Error eliminando cliente:', error);
+      alert('No se pudo eliminar el cliente. ¿Tiene pedidos asociados?');
+    }
   };
-
+  
   return (
     <div style={{ border: '1px solid #ccc', padding: '1rem', marginBottom: '1rem' }}>
       <h2 style={{ margin: 0 }}>{cliente.nombre}</h2>
