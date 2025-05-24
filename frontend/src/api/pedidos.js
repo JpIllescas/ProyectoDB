@@ -39,4 +39,3 @@ export async function deletePedido(id) {
   if (!res.ok) throw new Error('Error al eliminar pedido');
   return res.json();
 }
-
