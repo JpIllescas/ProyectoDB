@@ -1,26 +1,38 @@
-// frontend/src/pages/Tracking.jsx
+// File: frontend/src/pages/Tracking.jsx
 import React, { useState, useEffect } from 'react';
 import { getTrackings, createTracking } from '../api/tracking';
 import { getPedidos } from '../api/pedidos';
+import { getClientes } from '../api/clientes';
 import TrackingCard from '../components/TrackingCard';
 
 export default function Tracking() {
   const [records, setRecords] = useState([]);
   const [pedidos, setPedidos] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [clientes, setClientes] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ id_pedido: '', ubicacion: '', estado: '', fecha: '' });
+  const [formData, setFormData] = useState({
+    id_pedido: '',
+    id_cliente: '',
+    estado: '',
+    ubicacion: ''
+  });
 
   const fetchData = async () => {
     setLoading(true);
-    setError(null);
     try {
-      const [trkData, pedData] = await Promise.all([getTrackings(), getPedidos()]);
-      setRecords(trkData);
-      setPedidos(pedData);
-    } catch {
-      setError('Error al cargar tracking');
+      const [trk, ped, cli] = await Promise.all([
+        getTrackings(),
+        getPedidos(),
+        getClientes()
+      ]);
+      setRecords(trk);
+      setPedidos(ped);
+      setClientes(cli);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -28,73 +40,96 @@ export default function Tracking() {
 
   useEffect(() => { fetchData(); }, []);
 
-  const handleDelete = id => setRecords(prev => prev.filter(r => (r.id_tracking ?? r.id) !== id));
+  const handleDelete = id => setRecords(rs => rs.filter(r => r.id !== id));
+
   const handleChange = e => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(fd => ({ ...fd, [name]: value }));
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      await createTracking({
-        id_pedido: parseInt(formData.id_pedido, 10),
-        ubicacion: formData.ubicacion,
-        estado: formData.estado,
-        fecha: formData.fecha
-      });
+      console.log('Enviando:', formData);
+      await createTracking(formData);
+      setFormData({ id_pedido: '', id_cliente: '', estado: '', ubicacion: '' });
       setShowForm(false);
-      setFormData({ id_pedido: '', ubicacion: '', estado: '', fecha: '' });
       fetchData();
     } catch (err) {
-      console.error(err);
-      alert('Error al crear registro de tracking');
+      console.error('Error creando:', err);
+      alert(err.message);
     }
   };
 
-  if (loading) return <p>Cargando tracking...</p>;
-  if (error) return <p style={{ color: 'red' }}>{error}</p>;
+  if (loading) return <p>Cargando...</p>;
+  if (error) return <p className="text-red-600">{error}</p>;
 
   return (
-    <div style={{ maxWidth: '700px', margin: 'auto', padding: '1rem' }}>
-      <h1>Tracking Pedidos</h1>
-      <button style={{ marginBottom: '1rem' }} onClick={() => setShowForm(v => !v)}>
-        {showForm ? 'Cancelar' : 'Nuevo Registro'}
-      </button>
+    <div className="max-w-3xl mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Tracking</h1>
+      <button
+        className="mb-4 px-4 py-2 bg-green-500 text-white rounded"
+        onClick={() => setShowForm(s => !s)}
+      >{showForm ? 'Cancelar' : 'Nuevo Registro'}</button>
+
       {showForm && (
-        <form onSubmit={handleSubmit} style={{ border: '1px solid #ccc', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
-          <div style={{ marginBottom: '0.5rem' }}>
-            <label>Pedido</label><br/>
-            <select name="id_pedido" value={formData.id_pedido} onChange={handleChange} required>
-              <option value="">Seleccione Pedido</option>
+        <form onSubmit={handleSubmit} className="mb-6 border p-4 rounded shadow">
+          <div className="mb-2">
+            <label>Pedido</label>
+            <select
+              name="id_pedido"
+              value={formData.id_pedido}
+              onChange={handleChange}
+              required
+              className="w-full border p-2 rounded"
+            >
+              <option value="">Seleccione pedido</option>
               {pedidos.map(p => (
-                <option key={p.id_pedido} value={p.id_pedido}># {p.id_pedido}</option>
+                <option key={p.id_pedido} value={p.id_pedido}>#{p.id_pedido}</option>
               ))}
             </select>
           </div>
-          <div style={{ marginBottom: '0.5rem' }}>
-            <label>Ubicación</label><br/>
-            <input name="ubicacion" value={formData.ubicacion} onChange={handleChange} required />
+          <div className="mb-2">
+            <label>Cliente</label>
+            <select
+              name="id_cliente"
+              value={formData.id_cliente}
+              onChange={handleChange}
+              required
+              className="w-full border p-2 rounded"
+            >
+              <option value="">Seleccione cliente</option>
+              {clientes.map(c => (
+                <option key={c.id_cliente} value={c.id_cliente}>{c.nombre}</option>
+              ))}
+            </select>
           </div>
-          <div style={{ marginBottom: '0.5rem' }}>
-            <label>Estado</label><br/>
-            <input name="estado" value={formData.estado} onChange={handleChange} required />
+          <div className="mb-2">
+            <label>Estado</label>
+            <input
+              name="estado"
+              value={formData.estado}
+              onChange={handleChange}
+              required
+              className="w-full border p-2 rounded"
+            />
           </div>
-          <div style={{ marginBottom: '0.5rem' }}>
-            <label>Fecha/Hora</label><br/>
-            <input name="fecha" type="datetime-local" value={formData.fecha} onChange={handleChange} required />
+          <div className="mb-2">
+            <label>Ubicación</label>
+            <input
+              name="ubicacion"
+              value={formData.ubicacion}
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+            />
           </div>
-          <button type="submit">Guardar Registro</button>
+          <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">Guardar</button>
         </form>
       )}
-      {records.length === 0 ? (
-        <p>No hay registros de tracking.</p>
-      ) : (
-        records.map(r => {
-          const key = r.id_tracking ?? r.id;
-          return <TrackingCard key={key} record={r} onDelete={handleDelete} />;
-        })
-      )}
+
+      {records.length === 0 ? <p>No hay registros</p> : records.map(r => (
+        <TrackingCard key={r.id} record={r} onDelete={handleDelete} />
+      ))}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 // 1) API: frontend/src/api/pedidos.js
 // Funciones para manejar llamadas al microservicio de pedidos.
-const BASE = import.meta.env.VITE_API_MYSQL;
+const BASE = import.meta.env.VITE_API_ORACLE;
 
 export async function getPedidos() {
   const res = await fetch(`${BASE}/pedidos`);

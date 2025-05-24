@@ -1,39 +1,45 @@
-// 1) API helper: frontend/src/api/tracking.js
 const BASE = import.meta.env.VITE_API_COCKROACH;
 
-export async function getTrackings() {
-  const res = await fetch(`${BASE}/tracking`);
-  if (!res.ok) throw new Error('Error al obtener trackings');
+async function handleResponse(res) {
+  if (!res.ok) {
+    let err = 'Error HTTP ' + res.status;
+    try {
+      const body = await res.json();
+      if (body.error) err = body.error;
+    } catch {}
+    throw new Error(err);
+  }
+  // DELETE returns no body
+  if (res.status === 204 || res.status === 200 && res.headers.get('Content-Length') === '0') return;
   return res.json();
 }
 
-export async function getTrackingById(id) {
-  const res = await fetch(`${BASE}/tracking/${id}`);
-  if (!res.ok) throw new Error('Error al obtener registro');
-  return res.json();
+export function getTrackings() {
+  return fetch(`${BASE}/tracking`).then(handleResponse);
 }
 
-export async function createTracking(record) {
-  const res = await fetch(`${BASE}/tracking`, {
+export function getTrackingById(id) {
+  return fetch(`${BASE}/tracking/${id}`).then(handleResponse);
+}
+
+export function createTracking(record) {
+  return fetch(`${BASE}/tracking`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(record),
-  });
-  if (!res.ok) throw new Error('Error al crear registro');
-  return res.json();
+  }).then(handleResponse);
 }
 
-export async function updateTracking(id, record) {
-  const res = await fetch(`${BASE}/tracking/${id}`, {
+export function updateTracking(id, record) {
+  return fetch(`${BASE}/tracking/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(record),
-  });
-  if (!res.ok) throw new Error('Error al actualizar registro');
-  return res.json();
+  }).then(handleResponse);
 }
 
-export async function deleteTracking(id) {
-  const res = await fetch(`${BASE}/tracking/${id}`, { method: 'DELETE' });
-  if (!res.ok) throw new Error('Error al eliminar registro');
+export function deleteTracking(id) {
+  return fetch(`${BASE}/tracking/${id}`, {
+    method: 'DELETE',
+  }).then(handleResponse);
 }
