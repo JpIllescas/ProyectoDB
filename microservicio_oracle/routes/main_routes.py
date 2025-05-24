@@ -88,10 +88,10 @@ def route_create_pedido():
     data, status = create_pedido(request.json, SessionLocal)
     return jsonify(data), status
 
-@main_bp.route("/pedidos/<int:idz>", methods=["PUT"])
-def route_update_pedido(idz):
+@main_bp.route("/pedidos/<int:id>", methods=["PUT"])
+def route_update_pedido(id):
     SessionLocal = current_app.config["SESSION_LOCAL"]
-    data, status = update_pedido(idz, request.json, SessionLocal)
+    data, status = update_pedido(id, request.json, SessionLocal)
     return jsonify(data), status
 
 @main_bp.route("/pedidos/<int:id>", methods=["DELETE"])
@@ -119,8 +119,8 @@ def route_create_detalle_pedido():
     data, status = create_detalle(request.json, SessionLocal)
     return jsonify(data), status
 
-@main_bp.route("/detalle_pedido/<int:idz>", methods=["PUT"])
-def route_update_detalle_pedido(idz):
+@main_bp.route("/detalle_pedido/<int:id>", methods=["PUT"])
+def route_update_detalle_pedido(id):
     SessionLocal = current_app.config["SESSION_LOCAL"]
-    data, status = update_detalle(idz, request.json, SessionLocal)
+    data, status = update_detalle(id, request.json, SessionLocal)
     return jsonify(data), status
