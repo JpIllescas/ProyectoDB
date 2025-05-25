@@ -204,6 +204,11 @@
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
+/* Hover effect for table rows */
+.hover\:bg-blue-50:hover {
+  background-color: #eff6ff !important;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .sidebar-modern {
@@ -579,6 +584,15 @@ body {
   color: #94a3b8 !important;
 }
 
+/* Hora en tema oscuro - ARREGLADO */
+[data-theme="dark"] .top-bar div[style*='fontSize: "32px"'] {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .top-bar div[style*='fontSize: "14px"'] {
+  color: #94a3b8 !important;
+}
+
 /* Botones en top bar en tema oscuro */
 [data-theme="dark"] .top-bar button {
   color: #94a3b8 !important;
@@ -751,8 +765,98 @@ body {
   background: rgba(71, 85, 105, 0.5) !important;
 }
 
+/* ARREGLO: Tema seleccionado en dropdown oscuro */
 [data-theme="dark"] div[style*="background: white"] button[style*="background: #f3f4f6"] {
-  background: rgba(71, 85, 105, 0.8) !important;
+  background: rgba(59, 130, 246, 0.3) !important;
+  color: #93c5fd !important;
+}
+
+/* ===== MYSQL VIEW TEMA OSCURO ===== */
+
+/* Tablas en tema oscuro */
+[data-theme="dark"] table {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] th {
+  color: #f8fafc !important;
+  background: linear-gradient(135deg, #334155, #475569) !important;
+  border-bottom: 2px solid #475569 !important;
+}
+
+[data-theme="dark"] td {
+  color: #e2e8f0 !important;
+  border-bottom: 1px solid #334155 !important;
+}
+
+[data-theme="dark"] tr:nth-child(even) {
+  background: rgba(51, 65, 85, 0.3) !important;
+}
+
+[data-theme="dark"] .hover\:bg-blue-50:hover {
+  background: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Badges y elementos especiales en tema oscuro */
+[data-theme="dark"] span[style*="background: #fef2f2"] {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #fca5a5 !important;
+}
+
+[data-theme="dark"] span[style*="background: #ecfdf5"] {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #6ee7b7 !important;
+}
+
+[data-theme="dark"] span[style*="background: #eff6ff"] {
+  background: rgba(59, 130, 246, 0.2) !important;
+  color: #93c5fd !important;
+}
+
+[data-theme="dark"] span[style*="background: #fef3c7"] {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #fcd34d !important;
+}
+
+[data-theme="dark"] span[style*="color: #059669"] {
+  color: #6ee7b7 !important;
+}
+
+[data-theme="dark"] span[style*="color: #2563eb"] {
+  color: #93c5fd !important;
+}
+
+[data-theme="dark"] span[style*="color: #d97706"] {
+  color: #fcd34d !important;
+}
+
+[data-theme="dark"] span[style*="color: #dc2626"] {
+  color: #fca5a5 !important;
+}
+
+/* Gradientes de fondo en tema oscuro */
+[data-theme="dark"] div[style*="background: linear-gradient(135deg, #f8fafc, #f1f5f9)"] {
+  background: linear-gradient(135deg, #334155, #475569) !important;
+}
+
+[data-theme="dark"] div[style*="background: linear-gradient(135deg, #ecfdf5, #d1fae5)"] {
+  background: linear-gradient(135deg, #1e293b, #334155) !important;
+}
+
+[data-theme="dark"] div[style*="background: linear-gradient(135deg, #dbeafe, #bfdbfe)"] {
+  background: linear-gradient(135deg, #1e293b, #334155) !important;
+}
+
+[data-theme="dark"] div[style*="background: linear-gradient(135deg, #d1fae5, #a7f3d0)"] {
+  background: linear-gradient(135deg, #1e293b, #334155) !important;
+}
+
+[data-theme="dark"] div[style*="background: linear-gradient(135deg, #f3e8ff, #e9d5ff)"] {
+  background: linear-gradient(135deg, #1e293b, #334155) !important;
+}
+
+[data-theme="dark"] div[style*="background: linear-gradient(135deg, #fef3c7, #fde68a)"] {
+  background: linear-gradient(135deg, #1e293b, #334155) !important;
 }
 
 /* Transiciones suaves para el cambio de tema */

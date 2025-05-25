@@ -11,6 +11,7 @@ import Detalles from "./pages/Detalles"
 import DetalleEdit from "./pages/DetalleEdit"
 import Tracking from "./pages/Tracking"
 import TrackingEdit from "./pages/TrackingEdit"
+import MySQLView from "./pages/MySQLView"
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/detalles/editar/:id" element={<DetalleEdit />} />
           <Route path="/tracking" element={<Tracking />} />
           <Route path="/tracking/editar/:id" element={<TrackingEdit />} />
+          <Route path="/mysql-view" element={<MySQLView />} />
         </Routes>
       </Layout>
     </Router>

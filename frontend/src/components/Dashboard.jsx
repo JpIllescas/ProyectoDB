@@ -6,6 +6,7 @@ import { getClientes } from "../api/clientes"
 import { getProductos } from "../api/productos"
 import { getPedidos } from "../api/pedidos"
 import { getTrackings } from "../api/tracking"
+import { getMySQLStats } from "../api/mysql"
 import {
   Users,
   Package,
@@ -19,6 +20,8 @@ import {
   AlertCircle,
   BarChart3,
   Loader,
+  Database,
+  Eye,
 } from "lucide-react"
 
 export default function Dashboard() {
@@ -34,6 +37,12 @@ export default function Dashboard() {
     pedidosEntregados: 0,
     stockBajo: 0,
   })
+  const [mysqlStats, setMysqlStats] = useState({
+    clientes: 0,
+    productos: 0,
+    pedidos: 0,
+    detalles: 0,
+  })
   const [recentOrders, setRecentOrders] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -47,11 +56,12 @@ export default function Dashboard() {
     async function fetchDashboardData() {
       setLoading(true)
       try {
-        const [clientesData, productosData, pedidosData, trackingData] = await Promise.all([
+        const [clientesData, productosData, pedidosData, trackingData, mysqlData] = await Promise.all([
           getClientes().catch(() => []),
           getProductos().catch(() => []),
           getPedidos().catch(() => []),
           getTrackings().catch(() => []),
+          getMySQLStats().catch(() => ({ clientes: 0, productos: 0, pedidos: 0, detalles: 0 })),
         ])
 
         // Calcular estadísticas reales
@@ -70,6 +80,8 @@ export default function Dashboard() {
           pedidosEntregados,
           stockBajo,
         })
+
+        setMysqlStats(mysqlData)
 
         // Obtener pedidos recientes (últimos 5)
         const recent = pedidosData
@@ -151,6 +163,9 @@ export default function Dashboard() {
         break
       case "tracking":
         navigate("/tracking")
+        break
+      case "mysql":
+        navigate("/mysql-view")
         break
       default:
         break
@@ -562,11 +577,11 @@ export default function Dashboard() {
                     action: "pedido",
                   },
                   {
-                    name: "Tracking",
-                    icon: MapPin,
+                    name: "Ver MySQL",
+                    icon: Database,
                     color: "linear-gradient(135deg, #f59e0b, #d97706)",
-                    description: "Seguimiento",
-                    action: "tracking",
+                    description: "Datos replicados",
+                    action: "mysql",
                   },
                 ].map((action, index) => (
                   <button
@@ -623,7 +638,12 @@ export default function Dashboard() {
                 {[
                   { name: "Base de Datos Oracle", status: "Conectado", uptime: "99.9%" },
                   { name: "Base de Datos CockroachDB", status: "Conectado", uptime: "99.8%" },
-                  { name: "Base de Datos MySQL", status: "Conectado", uptime: "99.7%" },
+                  {
+                    name: "Base de Datos MySQL",
+                    status: "Replicando",
+                    uptime: "99.7%",
+                    extra: `${mysqlStats.clientes + mysqlStats.productos + mysqlStats.pedidos + mysqlStats.detalles} registros`,
+                  },
                   { name: "API Services", status: "Operativo", uptime: "100%" },
                 ].map((service, index) => (
                   <div
@@ -637,8 +657,10 @@ export default function Dashboard() {
                       borderRadius: "8px",
                       border: "1px solid #a7f3d0",
                       animationDelay: `${index * 0.1}s`,
+                      cursor: service.name.includes("MySQL") ? "pointer" : "default",
                     }}
                     className="animate-fade-in"
+                    onClick={() => service.name.includes("MySQL") && handleQuickAction("mysql")}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                       <div
@@ -651,10 +673,17 @@ export default function Dashboard() {
                         }}
                       ></div>
                       <div>
-                        <p style={{ fontWeight: "600", color: "#111827", fontSize: "14px", margin: 0 }}>
-                          {service.name}
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                          <p style={{ fontWeight: "600", color: "#111827", fontSize: "14px", margin: 0 }}>
+                            {service.name}
+                          </p>
+                          {service.name.includes("MySQL") && (
+                            <Eye style={{ width: "14px", height: "14px", color: "#059669" }} />
+                          )}
+                        </div>
+                        <p style={{ fontSize: "12px", color: "#065f46", margin: 0 }}>
+                          {service.status} {service.extra && `• ${service.extra}`}
                         </p>
-                        <p style={{ fontSize: "12px", color: "#065f46", margin: 0 }}>{service.status}</p>
                       </div>
                     </div>
                     <div style={{ textAlign: "right" }}>
