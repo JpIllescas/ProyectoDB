@@ -36,7 +36,7 @@ export default function TrackingEdit() {
         setClientes(cli)
       } catch (err) {
         console.error(err)
-        setError(err.message)
+        setError("Error al cargar registro de tracking")
       } finally {
         setLoading(false)
       }
@@ -57,7 +57,7 @@ export default function TrackingEdit() {
       navigate("/tracking")
     } catch (err) {
       console.error(err)
-      alert(err.message)
+      setError("Error al actualizar registro")
     } finally {
       setSaving(false)
     }
@@ -65,66 +65,103 @@ export default function TrackingEdit() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <Loader className="w-8 h-8 animate-spin text-orange-600" />
-        <span className="ml-2 text-gray-600">Cargando...</span>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 0" }}>
+        <Loader style={{ width: "32px", height: "32px", color: "#f59e0b" }} className="animate-spin" />
+        <span style={{ marginLeft: "8px", color: "#6b7280" }}>Cargando registro...</span>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="card">
-        <div className="card-body">
-          <div className="text-center py-8">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <MapPin className="w-8 h-8 text-red-600" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Error</h3>
-            <p className="text-red-600 mb-4">{error}</p>
-            <button onClick={() => navigate("/tracking")} className="btn-primary">
-              Volver a Tracking
-            </button>
+      <div className="card-modern">
+        <div style={{ padding: "32px", textAlign: "center" }}>
+          <div
+            style={{
+              width: "64px",
+              height: "64px",
+              background: "#fef2f2",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto 16px",
+            }}
+          >
+            <MapPin style={{ width: "32px", height: "32px", color: "#dc2626" }} />
           </div>
+          <h3 style={{ fontSize: "18px", fontWeight: "600", color: "#111827", margin: "0 0 8px 0" }}>Error</h3>
+          <p style={{ color: "#dc2626", marginBottom: "16px" }}>{error}</p>
+          <button onClick={() => navigate("/tracking")} className="btn-primary-modern">
+            Volver a Tracking
+          </button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div style={{ maxWidth: "768px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "24px" }}>
       {/* Header */}
-      <div className="card">
-        <div className="card-body">
-          <div className="flex items-center space-x-4">
-            <button onClick={() => navigate("/tracking")} className="btn-secondary flex items-center space-x-2">
-              <ArrowLeft className="w-4 h-4" />
+      <div className="card-modern">
+        <div style={{ padding: "24px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+            <button
+              onClick={() => navigate("/tracking")}
+              className="btn-secondary-modern"
+              style={{ display: "flex", alignItems: "center", gap: "8px" }}
+            >
+              <ArrowLeft style={{ width: "16px", height: "16px" }} />
               <span>Volver</span>
             </button>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Editar Tracking #{id}</h1>
-              <p className="text-gray-600">Actualiza la información del registro</p>
+              <h1 style={{ fontSize: "24px", fontWeight: "700", color: "#111827", margin: 0 }}>
+                Editar Tracking #{id}
+              </h1>
+              <p style={{ color: "#6b7280", margin: 0 }}>Actualiza la información del registro</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Formulario */}
-      <div className="card">
-        <div className="card-header">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-              <MapPin className="w-5 h-5 text-orange-600" />
+      <div className="card-modern">
+        <div className="card-header-modern">
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div
+              style={{
+                width: "40px",
+                height: "40px",
+                background: "linear-gradient(135deg, #fef3c7, #fde68a)",
+                borderRadius: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <MapPin style={{ width: "20px", height: "20px", color: "#f59e0b" }} />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">Información del Tracking</h3>
+            <h3 style={{ fontSize: "18px", fontWeight: "600", color: "#111827", margin: 0 }}>
+              Información del Tracking
+            </h3>
           </div>
         </div>
-        <div className="card-body">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div style={{ padding: "32px" }}>
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "24px" }}>
               <div>
-                <label className="form-label flex items-center space-x-2">
-                  <ShoppingCart className="w-4 h-4" />
+                <label
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    color: "#374151",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <ShoppingCart style={{ width: "16px", height: "16px" }} />
                   <span>Pedido</span>
                 </label>
                 <select
@@ -132,7 +169,7 @@ export default function TrackingEdit() {
                   value={formData.id_pedido}
                   onChange={handleChange}
                   required
-                  className="form-input"
+                  className="form-modern"
                 >
                   {pedidos.map((p) => (
                     <option key={p.id_pedido} value={p.id_pedido}>
@@ -142,8 +179,18 @@ export default function TrackingEdit() {
                 </select>
               </div>
               <div>
-                <label className="form-label flex items-center space-x-2">
-                  <User className="w-4 h-4" />
+                <label
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    color: "#374151",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <User style={{ width: "16px", height: "16px" }} />
                   <span>Cliente</span>
                 </label>
                 <select
@@ -151,7 +198,7 @@ export default function TrackingEdit() {
                   value={formData.id_cliente}
                   onChange={handleChange}
                   required
-                  className="form-input"
+                  className="form-modern"
                 >
                   {clientes.map((c) => (
                     <option key={c.id_cliente} value={c.id_cliente}>
@@ -161,10 +208,20 @@ export default function TrackingEdit() {
                 </select>
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "24px" }}>
               <div>
-                <label className="form-label flex items-center space-x-2">
-                  <MapPin className="w-4 h-4" />
+                <label
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    color: "#374151",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <MapPin style={{ width: "16px", height: "16px" }} />
                   <span>Estado</span>
                 </label>
                 <input
@@ -172,30 +229,49 @@ export default function TrackingEdit() {
                   value={formData.estado}
                   onChange={handleChange}
                   required
-                  className="form-input"
+                  className="form-modern"
                   placeholder="Ej: En tránsito, Entregado"
                 />
               </div>
               <div>
-                <label className="form-label flex items-center space-x-2">
-                  <Navigation className="w-4 h-4" />
+                <label
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    color: "#374151",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <Navigation style={{ width: "16px", height: "16px" }} />
                   <span>Ubicación</span>
                 </label>
                 <input
                   name="ubicacion"
                   value={formData.ubicacion}
                   onChange={handleChange}
-                  className="form-input"
+                  className="form-modern"
                   placeholder="Ej: Centro de distribución"
                 />
               </div>
             </div>
-            <div className="flex space-x-3 pt-4">
-              <button type="submit" disabled={saving} className="btn-primary flex items-center space-x-2">
-                {saving ? <Loader className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+            <div style={{ display: "flex", gap: "12px", paddingTop: "16px" }}>
+              <button
+                type="submit"
+                disabled={saving}
+                className="btn-primary-modern"
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+              >
+                {saving ? (
+                  <Loader style={{ width: "16px", height: "16px" }} className="animate-spin" />
+                ) : (
+                  <Save style={{ width: "16px", height: "16px" }} />
+                )}
                 <span>{saving ? "Guardando..." : "Guardar Cambios"}</span>
               </button>
-              <button type="button" onClick={() => navigate("/tracking")} className="btn-secondary">
+              <button type="button" onClick={() => navigate("/tracking")} className="btn-secondary-modern">
                 Cancelar
               </button>
             </div>

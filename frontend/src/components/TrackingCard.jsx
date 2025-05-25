@@ -21,60 +21,106 @@ export default function TrackingCard({ record, onDelete }) {
   const getStatusColor = (estado) => {
     switch (estado?.toLowerCase()) {
       case "entregado":
-        return "bg-green-100 text-green-800"
+        return "bg-emerald-100 text-emerald-800 border border-emerald-200"
       case "en tránsito":
       case "en transito":
-        return "bg-blue-100 text-blue-800"
+        return "bg-blue-100 text-blue-800 border border-blue-200"
       case "pendiente":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-amber-100 text-amber-800 border border-amber-200"
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800 border border-gray-200"
     }
   }
 
   return (
-    <div className="card animate-fade-in">
-      <div className="card-body">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center">
-              <MapPin className="w-6 h-6 text-white" />
+    <div className="card-modern animate-fade-in">
+      <div style={{ padding: "24px" }}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "16px", flex: 1 }}>
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                background: "linear-gradient(135deg, #f59e0b, #d97706)",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 4px 14px 0 rgba(245, 158, 11, 0.3)",
+              }}
+            >
+              <MapPin style={{ width: "24px", height: "24px", color: "white" }} />
             </div>
-            <div className="flex-1">
-              <div className="flex items-center space-x-3 mb-2">
-                <h3 className="text-lg font-semibold text-gray-900">Registro #{id}</h3>
-                <span className={`status-badge ${getStatusColor(estado)}`}>{estado}</span>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px" }}>
+                <h3 style={{ fontSize: "18px", fontWeight: "600", color: "#111827", margin: 0 }}>Registro #{id}</h3>
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "4px",
+                    padding: "4px 12px",
+                    borderRadius: "9999px",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                  }}
+                  className={getStatusColor(estado)}
+                >
+                  {estado}
+                </span>
               </div>
-              <div className="space-y-1">
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                  <ShoppingCart className="w-4 h-4" />
-                  <span>Pedido #{id_pedido}</span>
+              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <ShoppingCart style={{ width: "16px", height: "16px", color: "#6b7280" }} />
+                  <span style={{ fontSize: "14px", color: "#6b7280" }}>Pedido #{id_pedido}</span>
                 </div>
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                  <User className="w-4 h-4" />
-                  <span>Cliente #{id_cliente}</span>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <User style={{ width: "16px", height: "16px", color: "#6b7280" }} />
+                  <span style={{ fontSize: "14px", color: "#6b7280" }}>
+                    {record.cliente?.nombre || `Cliente #${id_cliente}`}
+                  </span>
                 </div>
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                  <Navigation className="w-4 h-4" />
-                  <span>{ubicacion}</span>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <Navigation style={{ width: "16px", height: "16px", color: "#6b7280" }} />
+                  <span style={{ fontSize: "14px", color: "#6b7280" }}>{ubicacion}</span>
                 </div>
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                  <Clock className="w-4 h-4" />
-                  <span>{new Date(timestamp).toLocaleString()}</span>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <Clock style={{ width: "16px", height: "16px", color: "#6b7280" }} />
+                  <span style={{ fontSize: "14px", color: "#6b7280" }}>
+                    {timestamp ? new Date(timestamp).toLocaleString() : "Sin fecha"}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
-          <div className="flex space-x-2">
+          <div style={{ display: "flex", gap: "8px" }}>
             <button
               onClick={() => navigate(`/tracking/editar/${id}`)}
-              className="btn-secondary flex items-center space-x-2"
+              className="btn-secondary-modern"
+              style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "14px" }}
             >
-              <Edit className="w-4 h-4" />
+              <Edit style={{ width: "16px", height: "16px" }} />
               <span>Editar</span>
             </button>
-            <button onClick={handleDelete} className="btn-danger flex items-center space-x-2">
-              <Trash2 className="w-4 h-4" />
+            <button
+              onClick={handleDelete}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "8px 16px",
+                background: "linear-gradient(135deg, #ef4444, #dc2626)",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                fontSize: "14px",
+                fontWeight: "600",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+                boxShadow: "0 2px 8px 0 rgba(239, 68, 68, 0.3)",
+              }}
+            >
+              <Trash2 style={{ width: "16px", height: "16px" }} />
               <span>Eliminar</span>
             </button>
           </div>

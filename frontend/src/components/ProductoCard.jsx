@@ -18,47 +18,78 @@ export default function ProductoCard({ producto, onDelete }) {
   }
 
   const getStockStatus = (stock) => {
-    if (stock === 0) return { color: "red", text: "Sin stock", icon: AlertTriangle }
-    if (stock < 10) return { color: "yellow", text: "Stock bajo", icon: AlertTriangle }
-    return { color: "green", text: "En stock", icon: Archive }
+    if (stock === 0) return { color: "#dc2626", text: "Sin stock", icon: AlertTriangle }
+    if (stock < 10) return { color: "#d97706", text: "Stock bajo", icon: AlertTriangle }
+    return { color: "#059669", text: "En stock", icon: Archive }
   }
 
   const stockStatus = getStockStatus(producto.stock)
 
   return (
-    <div className="card animate-fade-in">
-      <div className="card-body">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
-              <Package className="w-6 h-6 text-white" />
+    <div className="card-modern animate-fade-in">
+      <div style={{ padding: "24px" }}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "16px", flex: 1 }}>
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                background: "linear-gradient(135deg, #8b5cf6, #7c3aed)",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 4px 14px 0 rgba(139, 92, 246, 0.3)",
+              }}
+            >
+              <Package style={{ width: "24px", height: "24px", color: "white" }} />
             </div>
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold text-gray-900">{producto.nombre}</h3>
-              <div className="space-y-2 mt-2">
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                  <DollarSign className="w-4 h-4" />
-                  <span className="font-semibold text-green-600">${producto.precio}</span>
+            <div style={{ flex: 1 }}>
+              <h3 style={{ fontSize: "18px", fontWeight: "600", color: "#111827", margin: "0 0 8px 0" }}>
+                {producto.nombre}
+              </h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <DollarSign style={{ width: "16px", height: "16px", color: "#6b7280" }} />
+                  <span style={{ fontSize: "16px", fontWeight: "600", color: "#059669" }}>${producto.precio}</span>
                 </div>
-                <div className="flex items-center space-x-2 text-sm">
-                  <stockStatus.icon className={`w-4 h-4 text-${stockStatus.color}-500`} />
-                  <span className={`font-medium text-${stockStatus.color}-600`}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <stockStatus.icon style={{ width: "16px", height: "16px", color: stockStatus.color }} />
+                  <span style={{ fontSize: "14px", fontWeight: "500", color: stockStatus.color }}>
                     {producto.stock} unidades - {stockStatus.text}
                   </span>
                 </div>
               </div>
             </div>
           </div>
-          <div className="flex space-x-2">
+          <div style={{ display: "flex", gap: "8px" }}>
             <button
               onClick={() => navigate(`/productos/editar/${producto.id_producto}`)}
-              className="btn-secondary flex items-center space-x-2"
+              className="btn-secondary-modern"
+              style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "14px" }}
             >
-              <Edit className="w-4 h-4" />
+              <Edit style={{ width: "16px", height: "16px" }} />
               <span>Editar</span>
             </button>
-            <button onClick={handleDelete} className="btn-danger flex items-center space-x-2">
-              <Trash2 className="w-4 h-4" />
+            <button
+              onClick={handleDelete}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "8px 16px",
+                background: "linear-gradient(135deg, #ef4444, #dc2626)",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                fontSize: "14px",
+                fontWeight: "600",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+                boxShadow: "0 2px 8px 0 rgba(239, 68, 68, 0.3)",
+              }}
+            >
+              <Trash2 style={{ width: "16px", height: "16px" }} />
               <span>Eliminar</span>
             </button>
           </div>

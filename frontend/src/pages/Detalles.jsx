@@ -5,7 +5,7 @@ import { getProductos } from "../api/productos"
 import { getDetalles, createDetalle } from "../api/detalles"
 import { getPedidos } from "../api/pedidos"
 import DetalleCard from "../components/DetalleCard"
-import { FileText, Plus, Search, ShoppingCart, Hash, Loader } from "lucide-react"
+import { FileText, Plus, Search, ShoppingCart, Hash, Package, Loader } from "lucide-react"
 
 export default function Detalles() {
   const [detalles, setDetalles] = useState([])
@@ -25,7 +25,8 @@ export default function Detalles() {
       const [data, prodData, pedData] = await Promise.all([getDetalles(), getProductos(), getPedidos()])
       const enriched = data.map((d) => ({
         ...d,
-        producto: prodData.find((p) => p.id_producto === d.id_producto) || { nombre: "Desconocido" },
+        producto: prodData.find((p) => p.id_producto === d.id_producto) || { nombre: "Producto no encontrado" },
+        pedido: pedData.find((p) => p.id_pedido === d.id_pedido) || { id_pedido: d.id_pedido },
       }))
       setDetalles(enriched)
       setFilteredDetalles(enriched)
@@ -75,102 +76,182 @@ export default function Detalles() {
     }
   }
 
-  // Estadísticas
+  // Estadísticas REALES calculadas dinámicamente
   const totalDetalles = detalles.length
-  const totalUnidades = detalles.reduce((sum, d) => sum + d.cantidad, 0)
+  const totalUnidades = detalles.reduce((sum, d) => sum + (d.cantidad || 0), 0)
   const pedidosUnicos = new Set(detalles.map((d) => d.id_pedido)).size
+  const productosUnicos = new Set(detalles.map((d) => d.id_producto)).size
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <Loader className="w-8 h-8 animate-spin text-emerald-600" />
-        <span className="ml-2 text-gray-600">Cargando detalles...</span>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 0" }}>
+        <Loader style={{ width: "32px", height: "32px", color: "#10b981" }} className="animate-spin" />
+        <span style={{ marginLeft: "8px", color: "#6b7280" }}>Cargando detalles...</span>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="card">
-        <div className="card-body">
-          <div className="text-center py-8">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FileText className="w-8 h-8 text-red-600" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Error al cargar</h3>
-            <p className="text-red-600">{error}</p>
-            <button onClick={fetchData} className="btn-primary mt-4">
-              Reintentar
-            </button>
+      <div className="card-modern">
+        <div style={{ padding: "32px", textAlign: "center" }}>
+          <div
+            style={{
+              width: "64px",
+              height: "64px",
+              background: "#fef2f2",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto 16px",
+            }}
+          >
+            <FileText style={{ width: "32px", height: "32px", color: "#dc2626" }} />
           </div>
+          <h3 style={{ fontSize: "18px", fontWeight: "600", color: "#111827", margin: "0 0 8px 0" }}>
+            Error al cargar
+          </h3>
+          <p style={{ color: "#dc2626", marginBottom: "16px" }}>{error}</p>
+          <button onClick={fetchData} className="btn-primary-modern">
+            Reintentar
+          </button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
-      {/* Estadísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="card">
-          <div className="card-body">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-emerald-500 rounded-lg flex items-center justify-center">
-                <FileText className="w-6 h-6 text-white" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Detalles</p>
-                <p className="text-2xl font-semibold text-gray-900">{totalDetalles}</p>
-              </div>
+    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+      {/* Estadísticas REALES */}
+      <div className="stats-grid-modern" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+        <div className="stat-card-modern">
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                background: "#10b981",
+                borderRadius: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <FileText style={{ width: "24px", height: "24px", color: "white" }} />
+            </div>
+            <div style={{ marginLeft: "16px" }}>
+              <p style={{ fontSize: "14px", fontWeight: "500", color: "#6b7280", margin: 0 }}>Total Detalles</p>
+              <p style={{ fontSize: "24px", fontWeight: "600", color: "#111827", margin: 0 }}>{totalDetalles}</p>
             </div>
           </div>
         </div>
 
-        <div className="card">
-          <div className="card-body">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-                <Hash className="w-6 h-6 text-white" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Unidades</p>
-                <p className="text-2xl font-semibold text-gray-900">{totalUnidades}</p>
-              </div>
+        <div className="stat-card-modern">
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                background: "#3b82f6",
+                borderRadius: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Hash style={{ width: "24px", height: "24px", color: "white" }} />
+            </div>
+            <div style={{ marginLeft: "16px" }}>
+              <p style={{ fontSize: "14px", fontWeight: "500", color: "#6b7280", margin: 0 }}>Total Unidades</p>
+              <p style={{ fontSize: "24px", fontWeight: "600", color: "#111827", margin: 0 }}>{totalUnidades}</p>
             </div>
           </div>
         </div>
 
-        <div className="card">
-          <div className="card-body">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
-                <ShoppingCart className="w-6 h-6 text-white" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Pedidos Únicos</p>
-                <p className="text-2xl font-semibold text-gray-900">{pedidosUnicos}</p>
-              </div>
+        <div className="stat-card-modern">
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                background: "#8b5cf6",
+                borderRadius: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ShoppingCart style={{ width: "24px", height: "24px", color: "white" }} />
+            </div>
+            <div style={{ marginLeft: "16px" }}>
+              <p style={{ fontSize: "14px", fontWeight: "500", color: "#6b7280", margin: 0 }}>Pedidos Únicos</p>
+              <p style={{ fontSize: "24px", fontWeight: "600", color: "#111827", margin: 0 }}>{pedidosUnicos}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="stat-card-modern">
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                background: "#f59e0b",
+                borderRadius: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Package style={{ width: "24px", height: "24px", color: "white" }} />
+            </div>
+            <div style={{ marginLeft: "16px" }}>
+              <p style={{ fontSize: "14px", fontWeight: "500", color: "#6b7280", margin: 0 }}>Productos Únicos</p>
+              <p style={{ fontSize: "24px", fontWeight: "600", color: "#111827", margin: 0 }}>{productosUnicos}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Controles */}
-      <div className="card">
-        <div className="card-body">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+      <div className="card-modern">
+        <div style={{ padding: "24px" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
+            }}
+            className="sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div style={{ position: "relative", flex: 1, maxWidth: "384px" }}>
+              <Search
+                style={{
+                  position: "absolute",
+                  left: "12px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  color: "#9ca3af",
+                  width: "20px",
+                  height: "20px",
+                }}
+              />
               <input
                 type="text"
                 placeholder="Buscar por producto, pedido o detalle..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="form-input pl-10"
+                className="form-modern"
+                style={{ paddingLeft: "44px" }}
               />
             </div>
-            <button onClick={() => setShowForm(!showForm)} className="btn-primary flex items-center space-x-2">
-              <Plus className="w-5 h-5" />
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="btn-primary-modern"
+              style={{ display: "flex", alignItems: "center", gap: "8px" }}
+            >
+              <Plus style={{ width: "20px", height: "20px" }} />
               <span>{showForm ? "Cancelar" : "Nuevo Detalle"}</span>
             </button>
           </div>
@@ -179,21 +260,33 @@ export default function Detalles() {
 
       {/* Formulario */}
       {showForm && (
-        <div className="card animate-fade-in">
-          <div className="card-header">
-            <h3 className="text-lg font-semibold text-gray-900">Crear Nuevo Detalle</h3>
+        <div className="card-modern animate-fade-in">
+          <div className="card-header-modern">
+            <h3 style={{ fontSize: "18px", fontWeight: "600", color: "#111827", margin: 0 }}>Crear Nuevo Detalle</h3>
           </div>
-          <div className="card-body">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div style={{ padding: "32px" }}>
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div
+                style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "16px" }}
+              >
                 <div>
-                  <label className="form-label">Pedido</label>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      color: "#374151",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    Pedido
+                  </label>
                   <select
                     name="id_pedido"
                     value={formData.id_pedido}
                     onChange={handleChange}
                     required
-                    className="form-input"
+                    className="form-modern"
                   >
                     <option value="">Seleccione un pedido...</option>
                     {pedidos.map((p) => (
@@ -204,13 +297,23 @@ export default function Detalles() {
                   </select>
                 </div>
                 <div>
-                  <label className="form-label">Producto</label>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      color: "#374151",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    Producto
+                  </label>
                   <select
                     name="id_producto"
                     value={formData.id_producto}
                     onChange={handleChange}
                     required
-                    className="form-input"
+                    className="form-modern"
                   >
                     <option value="">Seleccione un producto...</option>
                     {productos.map((p) => (
@@ -222,7 +325,17 @@ export default function Detalles() {
                 </div>
               </div>
               <div>
-                <label className="form-label">Cantidad</label>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    color: "#374151",
+                    marginBottom: "8px",
+                  }}
+                >
+                  Cantidad
+                </label>
                 <input
                   name="cantidad"
                   type="number"
@@ -230,15 +343,15 @@ export default function Detalles() {
                   value={formData.cantidad}
                   onChange={handleChange}
                   required
-                  className="form-input"
+                  className="form-modern"
                   placeholder="Ej: 5"
                 />
               </div>
-              <div className="flex space-x-3">
-                <button type="submit" className="btn-primary">
+              <div style={{ display: "flex", gap: "12px" }}>
+                <button type="submit" className="btn-primary-modern">
                   Guardar Detalle
                 </button>
-                <button type="button" onClick={() => setShowForm(false)} className="btn-secondary">
+                <button type="button" onClick={() => setShowForm(false)} className="btn-secondary-modern">
                   Cancelar
                 </button>
               </div>
@@ -248,26 +361,35 @@ export default function Detalles() {
       )}
 
       {/* Lista de detalles */}
-      <div className="space-y-4">
+      <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
         {filteredDetalles.length === 0 ? (
-          <div className="card">
-            <div className="card-body">
-              <div className="text-center py-12">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FileText className="w-8 h-8 text-gray-400" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {searchTerm ? "No se encontraron detalles" : "No hay detalles registrados"}
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  {searchTerm ? "Intenta con otros términos de búsqueda" : "Comienza agregando tu primer detalle"}
-                </p>
-                {!searchTerm && (
-                  <button onClick={() => setShowForm(true)} className="btn-primary">
-                    Crear Primer Detalle
-                  </button>
-                )}
+          <div className="card-modern">
+            <div style={{ padding: "48px", textAlign: "center" }}>
+              <div
+                style={{
+                  width: "64px",
+                  height: "64px",
+                  background: "#f3f4f6",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: "0 auto 16px",
+                }}
+              >
+                <FileText style={{ width: "32px", height: "32px", color: "#9ca3af" }} />
               </div>
+              <h3 style={{ fontSize: "18px", fontWeight: "600", color: "#111827", margin: "0 0 8px 0" }}>
+                {searchTerm ? "No se encontraron detalles" : "No hay detalles registrados"}
+              </h3>
+              <p style={{ color: "#6b7280", marginBottom: "16px" }}>
+                {searchTerm ? "Intenta con otros términos de búsqueda" : "Comienza agregando tu primer detalle"}
+              </p>
+              {!searchTerm && (
+                <button onClick={() => setShowForm(true)} className="btn-primary-modern">
+                  Crear Primer Detalle
+                </button>
+              )}
             </div>
           </div>
         ) : (

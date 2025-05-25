@@ -18,37 +18,68 @@ export default function ClienteCard({ cliente, onDelete }) {
   }
 
   return (
-    <div className="card animate-fade-in">
-      <div className="card-body">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-              <User className="w-6 h-6 text-white" />
+    <div className="card-modern animate-fade-in">
+      <div style={{ padding: "24px" }}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                background: "linear-gradient(135deg, #3b82f6, #1d4ed8)",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 4px 14px 0 rgba(59, 130, 246, 0.3)",
+              }}
+            >
+              <User style={{ width: "24px", height: "24px", color: "white" }} />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">{cliente.nombre}</h3>
-              <div className="space-y-1 mt-2">
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                  <Mail className="w-4 h-4" />
-                  <span>{cliente.email}</span>
+              <h3 style={{ fontSize: "18px", fontWeight: "600", color: "#111827", margin: "0 0 8px 0" }}>
+                {cliente.nombre}
+              </h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <Mail style={{ width: "16px", height: "16px", color: "#6b7280" }} />
+                  <span style={{ fontSize: "14px", color: "#6b7280" }}>{cliente.email}</span>
                 </div>
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                  <Phone className="w-4 h-4" />
-                  <span>{cliente.telefono}</span>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <Phone style={{ width: "16px", height: "16px", color: "#6b7280" }} />
+                  <span style={{ fontSize: "14px", color: "#6b7280" }}>{cliente.telefono}</span>
                 </div>
               </div>
             </div>
           </div>
-          <div className="flex space-x-2">
+          <div style={{ display: "flex", gap: "8px" }}>
             <button
               onClick={() => navigate(`/clientes/editar/${cliente.id_cliente}`)}
-              className="btn-secondary flex items-center space-x-2"
+              className="btn-secondary-modern"
+              style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "14px" }}
             >
-              <Edit className="w-4 h-4" />
+              <Edit style={{ width: "16px", height: "16px" }} />
               <span>Editar</span>
             </button>
-            <button onClick={handleDelete} className="btn-danger flex items-center space-x-2">
-              <Trash2 className="w-4 h-4" />
+            <button
+              onClick={handleDelete}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "8px 16px",
+                background: "linear-gradient(135deg, #ef4444, #dc2626)",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                fontSize: "14px",
+                fontWeight: "600",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+                boxShadow: "0 2px 8px 0 rgba(239, 68, 68, 0.3)",
+              }}
+            >
+              <Trash2 style={{ width: "16px", height: "16px" }} />
               <span>Eliminar</span>
             </button>
           </div>

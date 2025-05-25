@@ -22,58 +22,101 @@ export default function PedidoCard({ pedido, onDelete }) {
   const getStatusConfig = (status) => {
     switch (status) {
       case "Entregado":
-        return { color: "green", icon: CheckCircle, bgColor: "bg-green-100", textColor: "text-green-800" }
+        return { color: "#059669", icon: CheckCircle, bgColor: "#ecfdf5", textColor: "#065f46" }
       case "Enviado":
-        return { color: "blue", icon: Package, bgColor: "bg-blue-100", textColor: "text-blue-800" }
+        return { color: "#2563eb", icon: Package, bgColor: "#eff6ff", textColor: "#1e40af" }
       case "Pendiente":
-        return { color: "yellow", icon: Clock, bgColor: "bg-yellow-100", textColor: "text-yellow-800" }
+        return { color: "#d97706", icon: Clock, bgColor: "#fffbeb", textColor: "#92400e" }
       default:
-        return { color: "gray", icon: AlertCircle, bgColor: "bg-gray-100", textColor: "text-gray-800" }
+        return { color: "#6b7280", icon: AlertCircle, bgColor: "#f9fafb", textColor: "#374151" }
     }
   }
 
   const statusConfig = getStatusConfig(estado)
 
   return (
-    <div className="card animate-fade-in">
-      <div className="card-body">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-full flex items-center justify-center">
-              <ShoppingCart className="w-6 h-6 text-white" />
+    <div className="card-modern animate-fade-in">
+      <div style={{ padding: "24px" }}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "16px", flex: 1 }}>
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                background: "linear-gradient(135deg, #6366f1, #4f46e5)",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 4px 14px 0 rgba(99, 102, 241, 0.3)",
+              }}
+            >
+              <ShoppingCart style={{ width: "24px", height: "24px", color: "white" }} />
             </div>
-            <div className="flex-1">
-              <div className="flex items-center space-x-3 mb-2">
-                <h3 className="text-lg font-semibold text-gray-900">Pedido #{id_pedido}</h3>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px" }}>
+                <h3 style={{ fontSize: "18px", fontWeight: "600", color: "#111827", margin: 0 }}>
+                  Pedido #{id_pedido}
+                </h3>
                 <span
-                  className={`status-badge ${statusConfig.bgColor} ${statusConfig.textColor} flex items-center space-x-1`}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "4px",
+                    padding: "4px 12px",
+                    borderRadius: "9999px",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    background: statusConfig.bgColor,
+                    color: statusConfig.textColor,
+                  }}
                 >
-                  <statusConfig.icon className="w-3 h-3" />
+                  <statusConfig.icon style={{ width: "12px", height: "12px" }} />
                   <span>{estado}</span>
                 </span>
               </div>
-              <div className="space-y-1">
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                  <User className="w-4 h-4" />
-                  <span>{cliente.nombre}</span>
+              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <User style={{ width: "16px", height: "16px", color: "#6b7280" }} />
+                  <span style={{ fontSize: "14px", color: "#6b7280" }}>{cliente.nombre}</span>
                 </div>
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                  <Calendar className="w-4 h-4" />
-                  <span>{fecha ? new Date(fecha).toLocaleDateString() : ""}</span>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <Calendar style={{ width: "16px", height: "16px", color: "#6b7280" }} />
+                  <span style={{ fontSize: "14px", color: "#6b7280" }}>
+                    {fecha ? new Date(fecha).toLocaleDateString() : ""}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
-          <div className="flex space-x-2">
+          <div style={{ display: "flex", gap: "8px" }}>
             <button
               onClick={() => navigate(`/pedidos/editar/${id_pedido}`)}
-              className="btn-secondary flex items-center space-x-2"
+              className="btn-secondary-modern"
+              style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "14px" }}
             >
-              <Edit className="w-4 h-4" />
+              <Edit style={{ width: "16px", height: "16px" }} />
               <span>Editar</span>
             </button>
-            <button onClick={handleDelete} className="btn-danger flex items-center space-x-2">
-              <Trash2 className="w-4 h-4" />
+            <button
+              onClick={handleDelete}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "8px 16px",
+                background: "linear-gradient(135deg, #ef4444, #dc2626)",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                fontSize: "14px",
+                fontWeight: "600",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+                boxShadow: "0 2px 8px 0 rgba(239, 68, 68, 0.3)",
+              }}
+            >
+              <Trash2 style={{ width: "16px", height: "16px" }} />
               <span>Eliminar</span>
             </button>
           </div>

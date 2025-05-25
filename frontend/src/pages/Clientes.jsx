@@ -65,95 +65,156 @@ export default function Clientes() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <Loader className="w-8 h-8 animate-spin text-blue-600" />
-        <span className="ml-2 text-gray-600">Cargando clientes...</span>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 0" }}>
+        <Loader style={{ width: "32px", height: "32px", color: "#3b82f6" }} className="animate-spin" />
+        <span style={{ marginLeft: "8px", color: "#6b7280" }}>Cargando clientes...</span>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="card">
-        <div className="card-body">
-          <div className="text-center py-8">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Users className="w-8 h-8 text-red-600" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Error al cargar</h3>
-            <p className="text-red-600">{error}</p>
-            <button onClick={fetchData} className="btn-primary mt-4">
-              Reintentar
-            </button>
+      <div className="card-modern">
+        <div style={{ padding: "32px", textAlign: "center" }}>
+          <div
+            style={{
+              width: "64px",
+              height: "64px",
+              background: "#fef2f2",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto 16px",
+            }}
+          >
+            <Users style={{ width: "32px", height: "32px", color: "#dc2626" }} />
           </div>
+          <h3 style={{ fontSize: "18px", fontWeight: "600", color: "#111827", margin: "0 0 8px 0" }}>
+            Error al cargar
+          </h3>
+          <p style={{ color: "#dc2626", marginBottom: "16px" }}>{error}</p>
+          <button onClick={fetchData} className="btn-primary-modern">
+            Reintentar
+          </button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
+    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       {/* Header con estadísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="card">
-          <div className="card-body">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-white" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Clientes</p>
-                <p className="text-2xl font-semibold text-gray-900">{clientes.length}</p>
-              </div>
+      <div className="stats-grid-modern">
+        <div className="stat-card-modern">
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                background: "#3b82f6",
+                borderRadius: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Users style={{ width: "24px", height: "24px", color: "white" }} />
+            </div>
+            <div style={{ marginLeft: "16px" }}>
+              <p style={{ fontSize: "14px", fontWeight: "500", color: "#6b7280", margin: 0 }}>Total Clientes</p>
+              <p style={{ fontSize: "24px", fontWeight: "600", color: "#111827", margin: 0 }}>{clientes.length}</p>
             </div>
           </div>
         </div>
 
-        <div className="card">
-          <div className="card-body">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
-                <UserPlus className="w-6 h-6 text-white" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Nuevos este mes</p>
-                <p className="text-2xl font-semibold text-gray-900">+{Math.floor(clientes.length * 0.1)}</p>
-              </div>
+        <div className="stat-card-modern">
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                background: "#10b981",
+                borderRadius: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <UserPlus style={{ width: "24px", height: "24px", color: "white" }} />
+            </div>
+            <div style={{ marginLeft: "16px" }}>
+              <p style={{ fontSize: "14px", fontWeight: "500", color: "#6b7280", margin: 0 }}>Nuevos este mes</p>
+              <p style={{ fontSize: "24px", fontWeight: "600", color: "#111827", margin: 0 }}>
+                +{Math.floor(clientes.length * 0.1)}
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="card">
-          <div className="card-body">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
-                <Search className="w-6 h-6 text-white" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Resultados</p>
-                <p className="text-2xl font-semibold text-gray-900">{filteredClientes.length}</p>
-              </div>
+        <div className="stat-card-modern">
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                background: "#8b5cf6",
+                borderRadius: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Search style={{ width: "24px", height: "24px", color: "white" }} />
+            </div>
+            <div style={{ marginLeft: "16px" }}>
+              <p style={{ fontSize: "14px", fontWeight: "500", color: "#6b7280", margin: 0 }}>Resultados</p>
+              <p style={{ fontSize: "24px", fontWeight: "600", color: "#111827", margin: 0 }}>
+                {filteredClientes.length}
+              </p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Controles */}
-      <div className="card">
-        <div className="card-body">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+      <div className="card-modern">
+        <div style={{ padding: "24px" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
+            }}
+            className="sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div style={{ position: "relative", flex: 1, maxWidth: "384px" }}>
+              <Search
+                style={{
+                  position: "absolute",
+                  left: "12px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  color: "#9ca3af",
+                  width: "20px",
+                  height: "20px",
+                }}
+              />
               <input
                 type="text"
                 placeholder="Buscar clientes por nombre o email..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="form-input pl-10"
+                className="form-modern"
+                style={{ paddingLeft: "44px" }}
               />
             </div>
-            <button onClick={() => setShowForm(!showForm)} className="btn-primary flex items-center space-x-2">
-              <Plus className="w-5 h-5" />
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="btn-primary-modern"
+              style={{ display: "flex", alignItems: "center", gap: "8px" }}
+            >
+              <Plus style={{ width: "20px", height: "20px" }} />
               <span>{showForm ? "Cancelar" : "Nuevo Cliente"}</span>
             </button>
           </div>
@@ -162,53 +223,85 @@ export default function Clientes() {
 
       {/* Formulario */}
       {showForm && (
-        <div className="card animate-fade-in">
-          <div className="card-header">
-            <h3 className="text-lg font-semibold text-gray-900">Crear Nuevo Cliente</h3>
+        <div className="card-modern animate-fade-in">
+          <div className="card-header-modern">
+            <h3 style={{ fontSize: "18px", fontWeight: "600", color: "#111827", margin: 0 }}>Crear Nuevo Cliente</h3>
           </div>
-          <div className="card-body">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div style={{ padding: "32px" }}>
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div
+                style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "16px" }}
+              >
                 <div>
-                  <label className="form-label">Nombre completo</label>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      color: "#374151",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    Nombre completo
+                  </label>
                   <input
                     name="nombre"
                     value={formData.nombre}
                     onChange={handleChange}
                     required
-                    className="form-input"
+                    className="form-modern"
                     placeholder="Ej: Juan Pérez"
                   />
                 </div>
                 <div>
-                  <label className="form-label">Teléfono</label>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      color: "#374151",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    Teléfono
+                  </label>
                   <input
                     name="telefono"
                     value={formData.telefono}
                     onChange={handleChange}
                     required
-                    className="form-input"
+                    className="form-modern"
                     placeholder="Ej: +1234567890"
                   />
                 </div>
               </div>
               <div>
-                <label className="form-label">Email</label>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    color: "#374151",
+                    marginBottom: "8px",
+                  }}
+                >
+                  Email
+                </label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="form-input"
+                  className="form-modern"
                   placeholder="Ej: juan@ejemplo.com"
                 />
               </div>
-              <div className="flex space-x-3">
-                <button type="submit" className="btn-primary">
+              <div style={{ display: "flex", gap: "12px" }}>
+                <button type="submit" className="btn-primary-modern">
                   Guardar Cliente
                 </button>
-                <button type="button" onClick={() => setShowForm(false)} className="btn-secondary">
+                <button type="button" onClick={() => setShowForm(false)} className="btn-secondary-modern">
                   Cancelar
                 </button>
               </div>
@@ -218,26 +311,35 @@ export default function Clientes() {
       )}
 
       {/* Lista de clientes */}
-      <div className="space-y-4">
+      <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
         {filteredClientes.length === 0 ? (
-          <div className="card">
-            <div className="card-body">
-              <div className="text-center py-12">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="w-8 h-8 text-gray-400" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {searchTerm ? "No se encontraron clientes" : "No hay clientes registrados"}
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  {searchTerm ? "Intenta con otros términos de búsqueda" : "Comienza agregando tu primer cliente"}
-                </p>
-                {!searchTerm && (
-                  <button onClick={() => setShowForm(true)} className="btn-primary">
-                    Crear Primer Cliente
-                  </button>
-                )}
+          <div className="card-modern">
+            <div style={{ padding: "48px", textAlign: "center" }}>
+              <div
+                style={{
+                  width: "64px",
+                  height: "64px",
+                  background: "#f3f4f6",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: "0 auto 16px",
+                }}
+              >
+                <Users style={{ width: "32px", height: "32px", color: "#9ca3af" }} />
               </div>
+              <h3 style={{ fontSize: "18px", fontWeight: "600", color: "#111827", margin: "0 0 8px 0" }}>
+                {searchTerm ? "No se encontraron clientes" : "No hay clientes registrados"}
+              </h3>
+              <p style={{ color: "#6b7280", marginBottom: "16px" }}>
+                {searchTerm ? "Intenta con otros términos de búsqueda" : "Comienza agregando tu primer cliente"}
+              </p>
+              {!searchTerm && (
+                <button onClick={() => setShowForm(true)} className="btn-primary-modern">
+                  Crear Primer Cliente
+                </button>
+              )}
             </div>
           </div>
         ) : (
