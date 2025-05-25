@@ -26,7 +26,7 @@ export default function PedidoEdit() {
         })
         setClientes(cliData)
       } catch {
-        setError("Error al cargar datos.")
+        setError("Error al cargar datos del pedido")
       } finally {
         setLoading(false)
       }
@@ -58,66 +58,99 @@ export default function PedidoEdit() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <Loader className="w-8 h-8 animate-spin text-indigo-600" />
-        <span className="ml-2 text-gray-600">Cargando pedido...</span>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 0" }}>
+        <Loader style={{ width: "32px", height: "32px", color: "#6366f1" }} className="animate-spin" />
+        <span style={{ marginLeft: "8px", color: "#6b7280" }}>Cargando pedido...</span>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="card">
-        <div className="card-body">
-          <div className="text-center py-8">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <ShoppingCart className="w-8 h-8 text-red-600" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Error</h3>
-            <p className="text-red-600 mb-4">{error}</p>
-            <button onClick={() => navigate("/pedidos")} className="btn-primary">
-              Volver a Pedidos
-            </button>
+      <div className="card-modern">
+        <div style={{ padding: "32px", textAlign: "center" }}>
+          <div
+            style={{
+              width: "64px",
+              height: "64px",
+              background: "#fef2f2",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto 16px",
+            }}
+          >
+            <ShoppingCart style={{ width: "32px", height: "32px", color: "#dc2626" }} />
           </div>
+          <h3 style={{ fontSize: "18px", fontWeight: "600", color: "#111827", margin: "0 0 8px 0" }}>Error</h3>
+          <p style={{ color: "#dc2626", marginBottom: "16px" }}>{error}</p>
+          <button onClick={() => navigate("/pedidos")} className="btn-primary-modern">
+            Volver a Pedidos
+          </button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div style={{ maxWidth: "768px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "24px" }}>
       {/* Header */}
-      <div className="card">
-        <div className="card-body">
-          <div className="flex items-center space-x-4">
-            <button onClick={() => navigate("/pedidos")} className="btn-secondary flex items-center space-x-2">
-              <ArrowLeft className="w-4 h-4" />
+      <div className="card-modern">
+        <div style={{ padding: "24px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+            <button
+              onClick={() => navigate("/pedidos")}
+              className="btn-secondary-modern"
+              style={{ display: "flex", alignItems: "center", gap: "8px" }}
+            >
+              <ArrowLeft style={{ width: "16px", height: "16px" }} />
               <span>Volver</span>
             </button>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Editar Pedido #{id}</h1>
-              <p className="text-gray-600">Actualiza la información del pedido</p>
+              <h1 style={{ fontSize: "24px", fontWeight: "700", color: "#111827", margin: 0 }}>Editar Pedido #{id}</h1>
+              <p style={{ color: "#6b7280", margin: 0 }}>Actualiza la información del pedido</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Formulario */}
-      <div className="card">
-        <div className="card-header">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-              <ShoppingCart className="w-5 h-5 text-indigo-600" />
+      <div className="card-modern">
+        <div className="card-header-modern">
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div
+              style={{
+                width: "40px",
+                height: "40px",
+                background: "linear-gradient(135deg, #e0e7ff, #c7d2fe)",
+                borderRadius: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ShoppingCart style={{ width: "20px", height: "20px", color: "#6366f1" }} />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">Información del Pedido</h3>
+            <h3 style={{ fontSize: "18px", fontWeight: "600", color: "#111827", margin: 0 }}>Información del Pedido</h3>
           </div>
         </div>
-        <div className="card-body">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div style={{ padding: "32px" }}>
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "24px" }}>
               <div>
-                <label className="form-label flex items-center space-x-2">
-                  <User className="w-4 h-4" />
+                <label
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    color: "#374151",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <User style={{ width: "16px", height: "16px" }} />
                   <span>Cliente</span>
                 </label>
                 <select
@@ -125,7 +158,7 @@ export default function PedidoEdit() {
                   value={formData.cliente_id}
                   onChange={handleChange}
                   required
-                  className="form-input"
+                  className="form-modern"
                 >
                   {clientes.map((c) => (
                     <option key={c.id_cliente} value={c.id_cliente}>
@@ -135,11 +168,21 @@ export default function PedidoEdit() {
                 </select>
               </div>
               <div>
-                <label className="form-label flex items-center space-x-2">
-                  <Package className="w-4 h-4" />
+                <label
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    color: "#374151",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <Package style={{ width: "16px", height: "16px" }} />
                   <span>Estado</span>
                 </label>
-                <select name="estado" value={formData.estado} onChange={handleChange} required className="form-input">
+                <select name="estado" value={formData.estado} onChange={handleChange} required className="form-modern">
                   <option>Pendiente</option>
                   <option>Enviado</option>
                   <option>Entregado</option>
@@ -147,8 +190,18 @@ export default function PedidoEdit() {
               </div>
             </div>
             <div>
-              <label className="form-label flex items-center space-x-2">
-                <Calendar className="w-4 h-4" />
+              <label
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  color: "#374151",
+                  marginBottom: "8px",
+                }}
+              >
+                <Calendar style={{ width: "16px", height: "16px" }} />
                 <span>Fecha</span>
               </label>
               <input
@@ -157,15 +210,24 @@ export default function PedidoEdit() {
                 value={formData.fecha}
                 onChange={handleChange}
                 required
-                className="form-input"
+                className="form-modern"
               />
             </div>
-            <div className="flex space-x-3 pt-4">
-              <button type="submit" disabled={saving} className="btn-primary flex items-center space-x-2">
-                {saving ? <Loader className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+            <div style={{ display: "flex", gap: "12px", paddingTop: "16px" }}>
+              <button
+                type="submit"
+                disabled={saving}
+                className="btn-primary-modern"
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+              >
+                {saving ? (
+                  <Loader style={{ width: "16px", height: "16px" }} className="animate-spin" />
+                ) : (
+                  <Save style={{ width: "16px", height: "16px" }} />
+                )}
                 <span>{saving ? "Guardando..." : "Guardar Cambios"}</span>
               </button>
-              <button type="button" onClick={() => navigate("/pedidos")} className="btn-secondary">
+              <button type="button" onClick={() => navigate("/pedidos")} className="btn-secondary-modern">
                 Cancelar
               </button>
             </div>

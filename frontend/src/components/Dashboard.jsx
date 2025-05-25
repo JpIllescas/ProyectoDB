@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { getClientes } from "../api/clientes"
 import { getProductos } from "../api/productos"
 import { getPedidos } from "../api/pedidos"
@@ -21,6 +22,7 @@ import {
 } from "lucide-react"
 
 export default function Dashboard() {
+  const navigate = useNavigate()
   const [currentTime, setCurrentTime] = useState(new Date())
   const [stats, setStats] = useState({
     clientes: 0,
@@ -132,6 +134,26 @@ export default function Dashboard() {
         return "border-l-green-500"
       default:
         return "border-l-gray-300"
+    }
+  }
+
+  // Funciones de navegación para acciones rápidas
+  const handleQuickAction = (action) => {
+    switch (action) {
+      case "cliente":
+        navigate("/clientes")
+        break
+      case "producto":
+        navigate("/productos")
+        break
+      case "pedido":
+        navigate("/pedidos")
+        break
+      case "tracking":
+        navigate("/tracking")
+        break
+      default:
+        break
     }
   }
 
@@ -423,7 +445,11 @@ export default function Dashboard() {
                   <p style={{ fontSize: "14px", color: "#6b7280", margin: 0 }}>Últimas transacciones del sistema</p>
                 </div>
               </div>
-              <button className="btn-secondary-modern" style={{ fontSize: "14px" }}>
+              <button
+                onClick={() => navigate("/pedidos")}
+                className="btn-secondary-modern"
+                style={{ fontSize: "14px" }}
+              >
                 Ver Todos
               </button>
             </div>
@@ -519,28 +545,33 @@ export default function Dashboard() {
                     icon: Users,
                     color: "linear-gradient(135deg, #3b82f6, #2563eb)",
                     description: "Registrar cliente",
+                    action: "cliente",
                   },
                   {
                     name: "Nuevo Producto",
                     icon: Package,
                     color: "linear-gradient(135deg, #10b981, #059669)",
                     description: "Añadir inventario",
+                    action: "producto",
                   },
                   {
                     name: "Nuevo Pedido",
                     icon: ShoppingCart,
                     color: "linear-gradient(135deg, #8b5cf6, #7c3aed)",
                     description: "Crear pedido",
+                    action: "pedido",
                   },
                   {
                     name: "Tracking",
                     icon: MapPin,
                     color: "linear-gradient(135deg, #f59e0b, #d97706)",
                     description: "Seguimiento",
+                    action: "tracking",
                   },
                 ].map((action, index) => (
                   <button
                     key={action.name}
+                    onClick={() => handleQuickAction(action.action)}
                     style={{
                       padding: "16px",
                       background: action.color,
@@ -592,6 +623,7 @@ export default function Dashboard() {
                 {[
                   { name: "Base de Datos Oracle", status: "Conectado", uptime: "99.9%" },
                   { name: "Base de Datos CockroachDB", status: "Conectado", uptime: "99.8%" },
+                  { name: "Base de Datos MySQL", status: "Conectado", uptime: "99.7%" },
                   { name: "API Services", status: "Operativo", uptime: "100%" },
                 ].map((service, index) => (
                   <div
