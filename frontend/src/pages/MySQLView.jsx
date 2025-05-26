@@ -280,9 +280,7 @@ export default function MySQLView() {
               <h3 style={{ fontSize: "20px", fontWeight: "700", color: "#111827", margin: 0 }}>
                 Estado de Replicación
               </h3>
-              <p style={{ color: "#065f46", margin: 0, fontSize: "16px" }}>
-                Sistema de sincronización Oracle → RabbitMQ → MySQL
-              </p>
+              <p style={{ color: "#065f46", margin: 0, fontSize: "16px" }}>Oracle → RabbitMQ → MySQL & CockroachDB</p>
             </div>
             <div style={{ textAlign: "right" }}>
               <div
@@ -312,7 +310,12 @@ export default function MySQLView() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "24px" }}>
             {[
               { label: "Latencia Promedio", value: "< 50ms", icon: TrendingUp, color: "#10b981" },
-              { label: "Mensajes Procesados", value: "1,247", icon: RefreshCw, color: "#3b82f6" },
+              {
+                label: "Replicaciones Exitosas",
+                value: `${(data.stats.clientes || 0) + (data.stats.productos || 0) + (data.stats.pedidos || 0) + (data.stats.detalles || 0)}`,
+                icon: RefreshCw,
+                color: "#3b82f6",
+              },
               { label: "Tasa de Éxito", value: "99.9%", icon: CheckCircle, color: "#059669" },
               { label: "Cola RabbitMQ", value: "0 pendientes", icon: Server, color: "#8b5cf6" },
             ].map((metric, index) => (
