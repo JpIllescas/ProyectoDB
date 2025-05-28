@@ -268,7 +268,7 @@ export default function Dashboard() {
                   margin: 0,
                 }}
               >
-                ¡Bienvenido a ShipFlow Pro!
+                ¡Bienvenido a ShipFlow!
               </h1>
               <p style={{ fontSize: "18px", color: "#6b7280", margin: 0 }}>
                 Gestiona tus envíos y pedidos con inteligencia empresarial

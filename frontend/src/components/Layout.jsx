@@ -126,7 +126,7 @@ export default function Layout({ children }) {
                   </div>
                   <div>
                     <span style={{ fontSize: "20px", fontWeight: "bold", color: "white" }}>ShipFlow</span>
-                    <p style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.7)", margin: 0 }}>Pro Dashboard</p>
+                    <p style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.7)", margin: 0 }}>Jp y SHolweger</p>
                   </div>
                 </div>
                 <button
@@ -187,7 +187,7 @@ export default function Layout({ children }) {
             </div>
             <div>
               <span style={{ fontSize: "20px", fontWeight: "bold", color: "white" }}>ShipFlow</span>
-              <p style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.7)", margin: 0 }}>Pro Dashboard</p>
+              <p style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.7)", margin: 0 }}>JpIllescas y SHolweger</p>
             </div>
           </div>
         </div>
